@@ -87,6 +87,7 @@ coverage.xml
 data-pipeline/ingestion/data/
 data-pipeline/ingestion/analysis/
 bulk_fetch.log
+*.zip
 
 # Build
 .next/
