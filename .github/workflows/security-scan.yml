@@ -1,0 +1,100 @@
+name: "Security Scan"
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  python-security:
+    name: "Python Security Scan"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install bandit safety
+      
+      - name: Run Bandit (Python static code analysis)
+        run: |
+          bandit -r data-pipeline/ ml-pipeline/ web-app/backend/ -f json -o bandit-results.json || true
+      
+      - name: Run Safety (Python dependency check)
+        run: |
+          safety check -r data-pipeline/requirements.txt --json > safety-data-pipeline.json || true
+          safety check -r ml-pipeline/requirements.txt --json > safety-ml-pipeline.json || true
+          safety check -r web-app/backend/requirements.txt --json > safety-backend.json || true
+      
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-scan-results
+          path: |
+            bandit-results.json
+            safety-*.json
+  
+  js-security:
+    name: "JavaScript Security Scan"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: web-app/frontend/package-lock.json
+      
+      - name: Install dependencies
+        run: |
+          cd web-app/frontend
+          npm ci
+      
+      - name: Run npm audit
+        run: |
+          cd web-app/frontend
+          npm audit --json > npm-audit-results.json || true
+      
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: js-security-scan-results
+          path: web-app/frontend/npm-audit-results.json
+  
+  terraform-security:
+    name: "Terraform Security Scan"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
+        with:
+          working_directory: infrastructure/terraform
+          format: json
+          out_file: tfsec-results.json
+      
+      - name: Upload security scan results
+        uses: actions/upload-artifact@v3
+        with:
+          name: terraform-security-scan-results
+          path: infrastructure/terraform/tfsec-results.json

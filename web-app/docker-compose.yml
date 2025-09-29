@@ -1,0 +1,102 @@
+version: '3.8'
+
+services:
+  # PostgreSQL database for local development
+  postgres:
+    image: postgres:14-alpine
+    container_name: igdb-postgres
+    environment:
+      POSTGRES_DB: igdb_games
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/db/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Redis for caching
+  redis:
+    image: redis:6-alpine
+    container_name: igdb-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Backend API service
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    container_name: igdb-backend
+    volumes:
+      - ./backend:/app
+      - /app/__pycache__
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=igdb_games
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - DEBUG=True
+      - ENVIRONMENT=development
+      - IGDB_CLIENT_ID=${IGDB_CLIENT_ID}
+      - IGDB_CLIENT_SECRET=${IGDB_CLIENT_SECRET}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: uvicorn api.main:app --host 0.0.0.0 --port 8000 --reload
+
+  # Frontend web application
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: igdb-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+    depends_on:
+      - backend
+    command: npm run dev
+
+  # Cloud SQL Proxy for connecting to GCP development database
+  # Uncomment when needed for GCP integration
+  # cloudsql-proxy:
+  #   image: gcr.io/cloudsql-docker/gce-proxy:latest
+  #   container_name: igdb-cloudsql-proxy
+  #   command:
+  #     - "/cloud_sql_proxy"
+  #     - "-instances=${GCP_PROJECT_ID}:${GCP_REGION}:${DB_INSTANCE_NAME}=tcp:0.0.0.0:5433"
+  #     - "-credential_file=/secrets/cloudsql/credentials.json"
+  #   volumes:
+  #     - ./secrets/cloudsql:/secrets/cloudsql
+  #   ports:
+  #     - "5433:5433"
+
+volumes:
+  postgres_data:
+  redis_data:

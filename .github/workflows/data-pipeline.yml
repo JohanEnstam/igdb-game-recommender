@@ -1,0 +1,108 @@
+name: "Data Pipeline CI/CD"
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'data-pipeline/**'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'data-pipeline/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to deploy to'
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - dev
+          - staging
+          - prod
+
+jobs:
+  test:
+    name: "Test Data Pipeline"
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest pytest-cov flake8
+          if [ -f data-pipeline/requirements.txt ]; then pip install -r data-pipeline/requirements.txt; fi
+      
+      - name: Lint with flake8
+        run: |
+          flake8 data-pipeline --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 data-pipeline --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      
+      - name: Test with pytest
+        run: |
+          pytest data-pipeline/tests/ --cov=data-pipeline
+  
+  deploy:
+    name: "Deploy Data Pipeline"
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.event.inputs.environment || 'dev' }}
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      
+      - name: Deploy Cloud Functions
+        run: |
+          ENV=${{ github.event.inputs.environment || 'dev' }}
+          
+          # Deploy IGDB Ingest Function
+          gcloud functions deploy igdb-ingest-${ENV} \
+            --source=data-pipeline/cloud_functions/igdb_ingest \
+            --entry-point=process_igdb_data \
+            --runtime=python39 \
+            --trigger-topic=igdb-data-ingestion-${ENV} \
+            --service-account=${{ secrets.CF_SERVICE_ACCOUNT }} \
+            --set-env-vars="GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},ENVIRONMENT=${ENV}" \
+            --memory=512MB \
+            --timeout=540s
+          
+          # Deploy ETL Processor Function
+          gcloud functions deploy etl-processor-${ENV} \
+            --source=data-pipeline/cloud_functions/etl_processor \
+            --entry-point=process_etl \
+            --runtime=python39 \
+            --trigger-topic=igdb-etl-processing-${ENV} \
+            --service-account=${{ secrets.CF_SERVICE_ACCOUNT }} \
+            --set-env-vars="GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},ENVIRONMENT=${ENV}" \
+            --memory=1024MB \
+            --timeout=540s
+          
+          # Deploy Data Validator Function
+          gcloud functions deploy data-validator-${ENV} \
+            --source=data-pipeline/cloud_functions/data_validator \
+            --entry-point=validate_data \
+            --runtime=python39 \
+            --trigger-http \
+            --service-account=${{ secrets.CF_SERVICE_ACCOUNT }} \
+            --set-env-vars="GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},ENVIRONMENT=${ENV}" \
+            --memory=256MB \
+            --timeout=60s
