@@ -1,6 +1,6 @@
 # Staging environment configuration
 
-project_id = "igdb-recommender-staging"
+project_id = "igdb-pipeline-v3"
 environment = "staging"
 region = "europe-west1"
 zone = "europe-west1-b"

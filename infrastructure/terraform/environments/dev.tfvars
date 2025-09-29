@@ -1,6 +1,6 @@
 # Development environment configuration
 
-project_id = "igdb-recommender-dev"
+project_id = "igdb-pipeline-v3"
 environment = "dev"
 region = "europe-west1"
 zone = "europe-west1-b"
