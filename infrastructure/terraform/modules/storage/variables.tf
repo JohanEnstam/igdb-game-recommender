@@ -29,6 +29,12 @@ variable "raw_data_bucket_name" {
   default     = "igdb-raw-data"
 }
 
+variable "processed_data_bucket_name" {
+  description = "Name of the bucket for processed IGDB data"
+  type        = string
+  default     = "igdb-processed-data"
+}
+
 variable "model_artifacts_bucket_name" {
   description = "Name of the bucket for ML model artifacts"
   type        = string

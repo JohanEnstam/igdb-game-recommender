@@ -52,6 +52,12 @@ variable "raw_data_bucket_name" {
   default     = "igdb-raw-data"
 }
 
+variable "processed_data_bucket_name" {
+  description = "Name of the bucket for processed IGDB data"
+  type        = string
+  default     = "igdb-processed-data"
+}
+
 variable "model_artifacts_bucket_name" {
   description = "Name of the bucket for ML model artifacts"
   type        = string
@@ -127,4 +133,36 @@ variable "alert_notification_email" {
   description = "Email address for alert notifications"
   type        = string
   default     = "admin@example.com"
+}
+
+# IGDB API variables
+variable "igdb_client_id" {
+  description = "IGDB API Client ID"
+  type        = string
+  sensitive   = true
+}
+
+variable "igdb_client_secret" {
+  description = "IGDB API Client Secret"
+  type        = string
+  sensitive   = true
+}
+
+# Cloud Functions source code paths
+variable "data_cleaning_function_source_zip" {
+  description = "Path to the zipped source code for the data cleaning function"
+  type        = string
+  default     = "../data-pipeline/data_cleaning_pipeline.zip"
+}
+
+variable "igdb_ingest_function_source_zip" {
+  description = "Path to the zipped source code for the IGDB API ingest function"
+  type        = string
+  default     = "../data-pipeline/igdb_ingest.zip"
+}
+
+variable "etl_processor_function_source_zip" {
+  description = "Path to the zipped source code for the ETL processor function"
+  type        = string
+  default     = "../data-pipeline/etl_processor.zip"
 }

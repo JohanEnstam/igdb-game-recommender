@@ -1,78 +1,41 @@
 /**
- * Cloud SQL Terraform Module
+ * IGDB Game Recommendation System - Cloud SQL Module
  * 
- * Detta är en modul för att hantera Cloud SQL (PostgreSQL) i GCP.
+ * This module sets up Cloud SQL instances.
+ * Currently a placeholder for future database components.
  */
 
 variable "project_id" {
-  description = "GCP-projektets ID"
+  description = "The GCP project ID"
   type        = string
 }
 
 variable "environment" {
-  description = "Miljö (dev, staging, prod)"
+  description = "Environment (dev, staging, prod)"
   type        = string
 }
 
 variable "region" {
-  description = "GCP-region för Cloud SQL"
+  description = "The GCP region for resources"
   type        = string
-  default     = "europe-west1"
-}
-
-variable "instance_name" {
-  description = "Namn på Cloud SQL-instansen"
-  type        = string
-}
-
-variable "database_version" {
-  description = "Databasversion för PostgreSQL"
-  type        = string
-  default     = "POSTGRES_14"
-}
-
-variable "tier" {
-  description = "Maskintyp för Cloud SQL-instansen"
-  type        = string
-  default     = "db-f1-micro"
-}
-
-variable "disk_size" {
-  description = "Diskstorlek i GB"
-  type        = number
-  default     = 10
-}
-
-variable "databases" {
-  description = "Lista över databaser att skapa"
-  type        = list(string)
-  default     = ["games"]
-}
-
-variable "users" {
-  description = "Lista över användare att skapa"
-  type = list(object({
-    name     = string
-    password = string
-  }))
-  default = []
 }
 
 variable "labels" {
-  description = "Labels att applicera på alla resurser"
+  description = "A map of labels to apply to resources"
   type        = map(string)
   default     = {}
 }
 
-# Placeholder för Cloud SQL-resurser
-# Kommer att implementeras senare när vi börjar skapa faktiska databaser
-
-output "instance_connection_name" {
-  description = "Connection name för Cloud SQL-instansen"
-  value       = ""
+variable "instance_name" {
+  description = "Name of the Cloud SQL instance"
+  type        = string
+  default     = "igdb-postgres"
 }
 
-output "instance_ip_address" {
-  description = "IP-adress för Cloud SQL-instansen"
-  value       = ""
+# This is a placeholder module for future Cloud SQL resources
+# Will be implemented in the database phase
+
+output "status" {
+  description = "Status of the Cloud SQL module"
+  value       = "Placeholder module - will be implemented in the database phase"
 }
