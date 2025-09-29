@@ -17,12 +17,14 @@ import sys
 import json
 import argparse
 import logging
+import re
 from pathlib import Path
-from typing import List, Dict, Any
-from collections import Counter
+from typing import List, Dict, Any, Tuple, Set
+from collections import Counter, defaultdict
 
 import pandas as pd
 import numpy as np
+from difflib import SequenceMatcher
 
 # Helper function för att konvertera NumPy-typer till Python-standardtyper
 def convert_to_serializable(obj):
@@ -76,6 +78,222 @@ def load_games(input_dir: Path) -> List[Dict[str, Any]]:
     
     logger.info(f"Laddade totalt {len(games)} spel")
     return games
+
+def find_similar_games(games: List[Dict[str, Any]], output_dir: Path) -> Dict[str, Any]:
+    """
+    Identifiera potentiella dubbletter och olika versioner av samma spel
+    
+    Metoder som används:
+    1. Exakt namnmatchning (identiska namn)
+    2. Ordbaserad likhetsmätning (Jaccard-likhet)
+    3. Identifiering av versioner/utgåvor (DLC, GOTY, etc.)
+    4. Identifiering av spel i samma serie
+    """
+    logger.info("Analyserar potentiella dubbletter och spelserier...")
+    
+    # Skapa en dictionary med namn som nyckel för snabbare sökning
+    name_to_games = defaultdict(list)
+    for game in games:
+        if "name" in game and game["name"]:
+            name_to_games[game["name"].lower()].append(game)
+    
+    # Hitta exakta dubbletter (samma namn)
+    exact_duplicates = {name: games_list for name, games_list in name_to_games.items() if len(games_list) > 1}
+    
+    # Hitta potentiella versioner/utgåvor av samma spel
+    # Regex-mönster för att identifiera vanliga versionsmarkörer
+    version_patterns = [
+        r"(deluxe|premium|gold|complete|definitive|enhanced|remastered|hd|special|collector'?s?|goty|game of the year)",
+        r"(edition|version|collection|bundle)",
+        r"(dlc|expansion|season pass|content pack)",
+        r"(remake|reboot|remaster)",
+        r"(\d{4}|\d{2}|\d)$",  # Årtal eller versionsnummer i slutet
+        r"(vol\.?\s*\d+|volume\s*\d+)",
+        r"(chapter|episode|part)\s*\d+"
+    ]
+    
+    combined_pattern = re.compile("|".join(version_patterns), re.IGNORECASE)
+    
+    # Gruppera spel efter basnamn (utan versionsindikatorer)
+    base_name_to_games = defaultdict(list)
+    for name, game_list in name_to_games.items():
+        # Försök identifiera basnamnet genom att ta bort versionsindikatorer
+        base_name = re.sub(combined_pattern, "", name).strip()
+        # Ta bort eventuella kolon, bindestreck och andra separatorer i slutet
+        base_name = re.sub(r"[:;-–—_\s]+$", "", base_name).strip()
+        
+        if base_name and base_name != name:  # Om vi faktiskt tog bort något
+            for game in game_list:
+                base_name_to_games[base_name].append(game)
+    
+    # Filtrera för att bara behålla basnamn med flera spel
+    version_groups = {name: games_list for name, games_list in base_name_to_games.items() 
+                     if len(games_list) > 1 and len(name) > 3}  # Ignorera för korta basnamn
+    
+    # Hitta spel i samma serie (t.ex. "Final Fantasy I", "Final Fantasy II")
+    series_patterns = [
+        r"(.+)\s+\d+$",  # Namn följt av nummer i slutet
+        r"(.+)\s+[ivx]+$",  # Namn följt av romerska siffror
+        r"(.+):\s*.+$",  # Namn följt av kolon och undertitel
+    ]
+    
+    series_to_games = defaultdict(list)
+    for game in games:
+        if "name" not in game or not game["name"]:
+            continue
+            
+        name = game["name"]
+        for pattern in series_patterns:
+            match = re.match(pattern, name, re.IGNORECASE)
+            if match:
+                series_name = match.group(1).strip()
+                if len(series_name) > 3:  # Ignorera för korta serienamn
+                    series_to_games[series_name.lower()].append(game)
+                break
+    
+    # Filtrera för att bara behålla serier med flera spel
+    series_groups = {name: games_list for name, games_list in series_to_games.items() 
+                    if len(games_list) > 1}
+    
+    # Hitta liknande namn med en mer effektiv metod
+    # Vi använder en ordbaserad approach istället för full fuzzy matching
+    # Detta är betydligt snabbare än SequenceMatcher för stora datamängder
+    logger.info("Analyserar liknande namn med ordbaserad metod (mycket snabbare än full fuzzy matching)...")
+    
+    # Begränsa till ett rimligt urval för analys
+    sample_size = min(1000, len(games))  # Kraftigt reducerad sampelstorlek
+    
+    # Skapa en ordbok där nycklarna är ord och värdena är spel som innehåller dessa ord
+    word_to_games = defaultdict(set)
+    
+    # Använd ett urval av spel för ordbaserad analys
+    sample_games = games[:sample_size] if len(games) > sample_size else games
+    
+    # Förbehandla spelnamn och bygg ordindexet
+    game_words = {}
+    
+    for game in sample_games:
+        if "name" not in game or not game["name"]:
+            continue
+            
+        name = game["name"].lower()
+        # Ta bort specialtecken och dela upp i ord
+        words = re.findall(r'\w+', name)
+        # Filtrera bort mycket korta ord och vanliga ord
+        words = [w for w in words if len(w) > 2]
+        
+        if words:
+            game_words[game["id"]] = words
+            for word in words:
+                word_to_games[word].add(game["id"])
+    
+    # Hitta spel med överlappande ord
+    fuzzy_matches = []
+    processed_pairs = set()
+    
+    # Gå igenom varje spel och hitta andra spel med överlappande ord
+    for game_id, words in game_words.items():
+        # Hitta alla spel som delar minst ett ord med detta spel
+        candidate_games = set()
+        for word in words:
+            candidate_games.update(word_to_games[word])
+        
+        # Ta bort det aktuella spelet
+        candidate_games.discard(game_id)
+        
+        # För varje kandidatspel, beräkna Jaccard-likheten
+        game1 = next(g for g in sample_games if g["id"] == game_id)
+        
+        for candidate_id in candidate_games:
+            # Hoppa över om vi redan har behandlat detta par
+            pair_id = tuple(sorted([game_id, candidate_id]))
+            if pair_id in processed_pairs:
+                continue
+                
+            processed_pairs.add(pair_id)
+            
+            # Hitta kandidatspelet
+            game2 = next(g for g in sample_games if g["id"] == candidate_id)
+            
+            # Beräkna Jaccard-likhet (storlek av snittet / storlek av unionen)
+            words2 = game_words[candidate_id]
+            intersection = set(words) & set(words2)
+            union = set(words) | set(words2)
+            
+            if not union:
+                continue
+                
+            similarity = len(intersection) / len(union)
+            
+            # Använd en lägre tröskel eftersom Jaccard-likhet tenderar att ge lägre värden än SequenceMatcher
+            if similarity >= 0.5:  # Justerad tröskel för Jaccard-likhet
+                fuzzy_matches.append({
+                    "game1_id": game1["id"],
+                    "game1_name": game1["name"],
+                    "game2_id": game2["id"],
+                    "game2_name": game2["name"],
+                    "similarity": similarity
+                })
+    
+    # Sortera fuzzy matches efter likhet
+    fuzzy_matches.sort(key=lambda x: x["similarity"], reverse=True)
+    
+    # Sammanställ resultat
+    duplicate_stats = {
+        "exact_duplicates_count": len(exact_duplicates),
+        "version_groups_count": len(version_groups),
+        "series_groups_count": len(series_groups),
+        "fuzzy_matches_count": len(fuzzy_matches)
+    }
+    
+    # Spara resultat till filer
+    with open(output_dir / "duplicate_stats.json", "w", encoding="utf-8") as f:
+        json.dump(duplicate_stats, f, ensure_ascii=False, indent=2)
+    
+    # Spara exempel på exakta dubbletter
+    exact_duplicates_sample = {}
+    for name, game_list in list(exact_duplicates.items())[:100]:  # Begränsa till 100 exempel
+        exact_duplicates_sample[name] = [
+            {"id": g["id"], "name": g["name"], "first_release_date": g.get("first_release_date")} 
+            for g in game_list
+        ]
+    
+    with open(output_dir / "exact_duplicates_sample.json", "w", encoding="utf-8") as f:
+        json.dump(exact_duplicates_sample, f, ensure_ascii=False, indent=2)
+    
+    # Spara exempel på versionsgrupper
+    version_groups_sample = {}
+    for base_name, game_list in list(version_groups.items())[:100]:  # Begränsa till 100 exempel
+        version_groups_sample[base_name] = [
+            {"id": g["id"], "name": g["name"], "first_release_date": g.get("first_release_date")} 
+            for g in game_list
+        ]
+    
+    with open(output_dir / "version_groups_sample.json", "w", encoding="utf-8") as f:
+        json.dump(version_groups_sample, f, ensure_ascii=False, indent=2)
+    
+    # Spara exempel på spelserier
+    series_groups_sample = {}
+    for series_name, game_list in list(series_groups.items())[:100]:  # Begränsa till 100 exempel
+        series_groups_sample[series_name] = [
+            {"id": g["id"], "name": g["name"], "first_release_date": g.get("first_release_date")} 
+            for g in game_list
+        ]
+    
+    with open(output_dir / "series_groups_sample.json", "w", encoding="utf-8") as f:
+        json.dump(series_groups_sample, f, ensure_ascii=False, indent=2)
+    
+    # Spara fuzzy matches
+    with open(output_dir / "fuzzy_matches.json", "w", encoding="utf-8") as f:
+        json.dump(fuzzy_matches[:500], f, ensure_ascii=False, indent=2)  # Begränsa till 500 exempel
+    
+    # Logga resultat
+    logger.info(f"Hittade {duplicate_stats['exact_duplicates_count']} spel med exakt samma namn")
+    logger.info(f"Hittade {duplicate_stats['version_groups_count']} potentiella versionsgrupper")
+    logger.info(f"Hittade {duplicate_stats['series_groups_count']} potentiella spelserier")
+    logger.info(f"Hittade {duplicate_stats['fuzzy_matches_count']} par av spel med liknande namn")
+    
+    return duplicate_stats
 
 def analyze_games(games: List[Dict[str, Any]], output_dir: Path) -> None:
     """Analysera speldata och generera statistik"""
@@ -186,6 +404,24 @@ def main():
     
     # Analysera speldata
     analyze_games(games, output_dir)
+    
+    # Analysera dubbletter och liknande spel
+    logger.info("Startar analys av dubbletter och liknande spel (detta kan ta några minuter)...")
+    start_time = pd.Timestamp.now()
+    duplicate_stats = find_similar_games(games, output_dir)
+    end_time = pd.Timestamp.now()
+    duration = (end_time - start_time).total_seconds()
+    logger.info(f"Dubblett-analys slutförd på {duration:.1f} sekunder")
+    
+    # Uppdatera grundläggande statistik med dubblett-information
+    with open(output_dir / "basic_stats.json", "r", encoding="utf-8") as f:
+        basic_stats = json.load(f)
+    
+    basic_stats.update(duplicate_stats)
+    basic_stats["duplicate_analysis_time_seconds"] = duration
+    
+    with open(output_dir / "basic_stats.json", "w", encoding="utf-8") as f:
+        json.dump(basic_stats, f, ensure_ascii=False, indent=2)
 
 if __name__ == "__main__":
     main()

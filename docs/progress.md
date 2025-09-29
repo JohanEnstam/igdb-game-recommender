@@ -56,6 +56,7 @@ För att effektivt gå vidare har vi valt en hybridapproach där vi validerar kr
 1. ✅ Implementera skript för att hämta alla 350k spel från IGDB API
 2. ✅ Mäta faktisk tid och validera antagandet om 15 minuter
 3. ✅ Analysera datakvalitet och struktur
+4. ✅ Identifiera dubbletter och relaterade spel
 
 #### Resultat från IGDB API-validering
 - Totalt antal spel i IGDB: **328,924** (mindre än de uppskattade 350k)
@@ -69,18 +70,28 @@ För att effektivt gå vidare har vi valt en hybridapproach där vi validerar kr
   - Antal unika genrer: 23
   - Antal unika plattformar: 217
   - Antal unika teman: 22
+- Dubbletter och relaterade spel:
+  - 11,271 spel med exakt samma namn
+  - 5,481 potentiella versionsgrupper (olika utgåvor av samma spel)
+  - 11,881 potentiella spelserier (spel i samma franchise)
 
-### Fas 2: Grundläggande Infrastruktur
+### Fas 2: Datarensning och Datamodellering (Pågående)
+1. ⬜ Implementera datarensningspipeline enligt [datarensningsplanen](./data-cleaning-plan.md)
+2. ⬜ Skapa algoritmer för identifiering av dubbletter och relaterade spel
+3. ⬜ Utveckla datamodell för spel, relationer och grupper
+4. ⬜ Testa och validera datarensningslogiken
+
+### Fas 3: Grundläggande Infrastruktur
 1. ⬜ Sätta upp GitHub Actions secrets för CI/CD
 2. ⬜ Implementera Terraform för storage och BigQuery
-3. ⬜ Skapa BigQuery dataset och tabeller
+3. ⬜ Skapa BigQuery dataset och tabeller med optimerat schema
 
-### Fas 3: Data Pipeline
+### Fas 4: Data Pipeline
 1. ⬜ Implementera Cloud Function för IGDB API-anrop
-2. ⬜ Implementera ETL-process för att transformera och ladda data
+2. ⬜ Implementera ETL-process med datarensningslogik
 3. ⬜ Konfigurera Pub/Sub för event-driven arkitektur
 
-### Fas 4: Slutföra CI/CD-pipeline
+### Fas 5: Slutföra CI/CD-pipeline
 1. ⬜ Testa och validera Terraform-deployment
 2. ⬜ Konfigurera automatisk deployment av Cloud Functions
 3. ⬜ Sätta upp monitoring och alerting
@@ -134,3 +145,4 @@ python analyze_data.py --input ./data --output ./analysis
 - [IGDB API Dokumentation](https://api-docs.igdb.com/)
 - [GCP Konsol](https://console.cloud.google.com/home/dashboard?project=igdb-pipeline-v3)
 - [GitHub Repository](https://github.com/JohanEnstam/igdb-game-recommender)
+- [Datarensningsplan](./data-cleaning-plan.md)

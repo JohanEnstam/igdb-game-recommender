@@ -106,15 +106,21 @@ Denna approach ger oss det bästa av båda världar - vi validerar snabbt våra 
 
 1. **Högsta prioritet (Närmaste dagarna)**
    - ✅ Implementera och testa bulk_fetch.py
-   - Sätta upp GitHub Actions secrets
-   - Implementera Terraform för storage och BigQuery
+   - ✅ Analysera dubbletter och relaterade spel
+   - Implementera datarensningspipeline enligt [datarensningsplanen](./data-cleaning-plan.md)
+   - Utveckla datamodell för spel, relationer och grupper
 
 2. **Medelhög prioritet (Inom en vecka)**
+   - Sätta upp GitHub Actions secrets
+   - Implementera Terraform för storage och BigQuery
+   - Skapa optimerat BigQuery-schema baserat på datarensning
+
+3. **Medelhög prioritet (Inom två veckor)**
    - Implementera Cloud Function för IGDB API
-   - Skapa ETL-process
+   - Skapa ETL-process med datarensningslogik
    - Konfigurera Pub/Sub
 
-3. **Lägre prioritet (Efter grundläggande funktionalitet)**
+4. **Lägre prioritet (Efter grundläggande funktionalitet)**
    - Slutföra CI/CD-pipeline
    - Implementera monitoring och alerting
    - Optimera prestanda
@@ -123,15 +129,17 @@ Denna approach ger oss det bästa av båda världar - vi validerar snabbt våra 
 
 1. **Kortsiktiga mål**
    - ✅ Bekräfta att vi kan hämta alla spel inom 20 minuter (Uppnått: 12 min 5 sek för 328,924 spel)
-   - Framgångsrikt lagra all data i BigQuery
-   - Implementera grundläggande ETL-process
+   - ✅ Identifiera dubbletter och relaterade spel i databasen
+   - Implementera datarensningspipeline med minst 90% precision i dubblettidentifiering
+   - Framgångsrikt lagra rensad data i BigQuery med optimerat schema
 
 2. **Medellånga mål**
-   - Automatisera hela dataflödet från IGDB till BigQuery
-   - Implementera inkrementell synkronisering
-   - Skapa grundläggande rekommendationslogik
+   - Reducera redundans i databasen med minst 20% genom datarensning
+   - Automatisera hela dataflödet från IGDB till BigQuery med datarensning
+   - Implementera inkrementell synkronisering som bevarar relationer
+   - Skapa grundläggande rekommendationslogik baserad på spelrelationer
 
 3. **Långsiktiga mål**
-   - Komplett end-to-end demo med 200 nya spel
-   - Fullt automatiserad ML-pipeline
-   - Produktionsklar web-app
+   - Komplett end-to-end demo med 200 nya spel och korrekt relationsmappning
+   - Fullt automatiserad ML-pipeline som utnyttjar rensad data
+   - Produktionsklar web-app med rekommendationer baserade på spelrelationer
