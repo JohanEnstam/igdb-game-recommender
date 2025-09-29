@@ -72,6 +72,8 @@ yarn-error.log*
 # GCP
 .gcloud/
 *.json.key
+*-key.json
+terraform-admin-key.json
 
 # Testing
 .coverage
@@ -80,6 +82,11 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
+
+# IGDB data and analysis
+data-pipeline/ingestion/data/
+data-pipeline/ingestion/analysis/
+bulk_fetch.log
 
 # Build
 .next/
