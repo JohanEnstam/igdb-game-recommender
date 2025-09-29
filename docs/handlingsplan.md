@@ -44,14 +44,14 @@ Denna approach ger oss det bästa av båda världar - vi validerar snabbt våra 
 
 **Mål:** Sätta upp nödvändig infrastruktur för att lagra och bearbeta IGDB-data.
 
-1. **GitHub Actions secrets**
-   - Lägga till nödvändiga secrets för CI/CD:
-     - `GCP_PROJECT_ID`
-     - `GCP_SA_KEY` (base64-encodad)
-     - `TF_STATE_BUCKET`
-     - `CF_SERVICE_ACCOUNT`
-     - `CLOUD_RUN_SERVICE_ACCOUNT`
-     - `GCP_REGION`
+1. **GitHub Actions secrets** ✅
+   - Lagt till nödvändiga secrets för CI/CD:
+     - `GCP_PROJECT_ID`: igdb-pipeline-v3
+     - `GCP_SA_KEY`: Base64-encodad service account-nyckel
+     - `TF_STATE_BUCKET`: igdb-terraform-state
+     - `CF_SERVICE_ACCOUNT`: cf-igdb-ingest@igdb-pipeline-v3.iam.gserviceaccount.com
+     - `CLOUD_RUN_SERVICE_ACCOUNT`: cloud-run-igdb-api@igdb-pipeline-v3.iam.gserviceaccount.com
+     - `GCP_REGION`: europe-west1
 
 2. **Terraform för storage och BigQuery**
    - Implementera Terraform-moduler för:
@@ -107,11 +107,12 @@ Denna approach ger oss det bästa av båda världar - vi validerar snabbt våra 
 1. **Högsta prioritet (Närmaste dagarna)**
    - ✅ Implementera och testa bulk_fetch.py
    - ✅ Analysera dubbletter och relaterade spel
-   - Implementera datarensningspipeline enligt [datarensningsplanen](./data-cleaning-plan.md)
-   - Utveckla datamodell för spel, relationer och grupper
+   - ✅ Implementera datarensningspipeline enligt [datarensningsplanen](./data-cleaning-plan.md)
+   - ✅ Utveckla datamodell för spel, relationer och grupper
+   - ✅ Köra datarensningspipelinen på hela IGDB-databasen
+   - ✅ Sätta upp GitHub Actions secrets
 
 2. **Medelhög prioritet (Inom en vecka)**
-   - Sätta upp GitHub Actions secrets
    - Implementera Terraform för storage och BigQuery
    - Skapa optimerat BigQuery-schema baserat på datarensning
 
@@ -130,8 +131,10 @@ Denna approach ger oss det bästa av båda världar - vi validerar snabbt våra 
 1. **Kortsiktiga mål**
    - ✅ Bekräfta att vi kan hämta alla spel inom 20 minuter (Uppnått: 12 min 5 sek för 328,924 spel)
    - ✅ Identifiera dubbletter och relaterade spel i databasen
-   - Implementera datarensningspipeline med minst 90% precision i dubblettidentifiering
-   - Framgångsrikt lagra rensad data i BigQuery med optimerat schema
+   - ✅ Implementera datarensningspipeline med minst 90% precision i dubblettidentifiering
+   - ✅ Framgångsrikt bearbeta och rensa hela IGDB-databasen (328,924 spel)
+   - ✅ Konfigurera GitHub Secrets för CI/CD-pipeline
+   - Lagra rensad data i BigQuery med optimerat schema
 
 2. **Medellånga mål**
    - Reducera redundans i databasen med minst 20% genom datarensning
