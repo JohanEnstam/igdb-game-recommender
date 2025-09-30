@@ -76,15 +76,25 @@ class FeatureExtractor:
         """
         logger.info("Extraherar kategoriska features från %d spel", len(games_df))
         
-        # Förbehandla listor
-        genres = games_df['genres'].fillna('').apply(lambda x: [] if x == '' else x)
-        platforms = games_df['platforms'].fillna('').apply(lambda x: [] if x == '' else x)
-        themes = games_df['themes'].fillna('').apply(lambda x: [] if x == '' else x)
+        from scipy.sparse import csr_matrix
+        
+        # Förbehandla listor och kontrollera att de är listor
+        genres = games_df['genres'].apply(lambda x: [] if not isinstance(x, list) else x)
+        platforms = games_df['platforms'].apply(lambda x: [] if not isinstance(x, list) else x)
+        themes = games_df['themes'].apply(lambda x: [] if not isinstance(x, list) else x)
         
         # One-hot encoding
         genres_features = self.mlb_genres.fit_transform(genres)
         platforms_features = self.mlb_platforms.fit_transform(platforms)
         themes_features = self.mlb_themes.fit_transform(themes)
+        
+        # Konvertera till sparse matrices om de inte redan är det
+        if not isinstance(genres_features, csr_matrix):
+            genres_features = csr_matrix(genres_features)
+        if not isinstance(platforms_features, csr_matrix):
+            platforms_features = csr_matrix(platforms_features)
+        if not isinstance(themes_features, csr_matrix):
+            themes_features = csr_matrix(themes_features)
         
         # Kombinera alla kategoriska features
         categorical_features = hstack([
@@ -223,6 +233,71 @@ class FeatureExtractor:
         return features
 
 
+def load_games_from_local(cleaned_data_dir: str, raw_data_dir: str, limit: Optional[int] = None) -> pd.DataFrame:
+    """
+    Ladda speldata från lokala JSON-filer.
+    
+    Args:
+        cleaned_data_dir: Sökväg till katalog med rensad data
+        raw_data_dir: Sökväg till katalog med rådata
+        limit: Maximalt antal spel att ladda (None för alla)
+        
+    Returns:
+        DataFrame med speldata
+    """
+    import json
+    import glob
+    import os
+    
+    # Läs in rensad data
+    logger.info("Läser in rensad data från %s", cleaned_data_dir)
+    with open(os.path.join(cleaned_data_dir, "games.json"), "r") as f:
+        cleaned_games = json.load(f)
+    
+    # Begränsa antalet spel om limit är satt
+    if limit is not None:
+        cleaned_games = cleaned_games[:limit]
+    
+    # Skapa DataFrame från rensad data
+    cleaned_df = pd.DataFrame(cleaned_games)
+    
+    # Läs in rådata för att få kategoriska features
+    logger.info("Läser in rådata från %s", raw_data_dir)
+    raw_games = []
+    for file_path in glob.glob(os.path.join(raw_data_dir, "games_batch_*.json")):
+        with open(file_path, "r") as f:
+            batch = json.load(f)
+            raw_games.extend(batch)
+    
+    # Skapa DataFrame från rådata
+    raw_df = pd.DataFrame(raw_games)
+    
+    # Konvertera id till str för att matcha game_id i cleaned_df
+    raw_df['game_id'] = raw_df['id'].astype(str)
+    
+    # Slå ihop dataframes
+    logger.info("Slår ihop rensad data och rådata")
+    merged_df = pd.merge(cleaned_df, raw_df[['game_id', 'genres', 'platforms', 'themes']], 
+                         on='game_id', how='left')
+    
+    # Extrahera namn från kategoriska features
+    def extract_names(items):
+        if isinstance(items, list) and len(items) > 0 and isinstance(items[0], dict):
+            return [item.get('name', '') for item in items if isinstance(item, dict) and 'name' in item]
+        return []
+    
+    # Hantera kategoriska features
+    for col in ['genres', 'platforms', 'themes']:
+        if col in merged_df.columns:
+            merged_df[col] = merged_df[col].apply(lambda x: extract_names(x) if isinstance(x, list) else [])
+    
+    # Sortera efter quality_score
+    merged_df = merged_df.sort_values('quality_score', ascending=False).reset_index(drop=True)
+    
+    logger.info("Laddade %d spel med rensad data och kategoriska features", len(merged_df))
+    return merged_df
+
+
 def load_games_from_bigquery(limit: Optional[int] = None) -> pd.DataFrame:
     """
     Ladda speldata från BigQuery.
@@ -242,25 +317,43 @@ def load_games_from_bigquery(limit: Optional[int] = None) -> pd.DataFrame:
     
     query = f"""
     SELECT
-        game_id,
-        canonical_name,
-        display_name,
-        summary,
-        (SELECT ARRAY_AGG(genre) FROM UNNEST(genres) AS genre) AS genres,
-        (SELECT ARRAY_AGG(platform) FROM UNNEST(platforms) AS platform) AS platforms,
-        (SELECT ARRAY_AGG(theme) FROM UNNEST(themes) AS theme) AS themes,
-        quality_score
+        raw.id AS game_id,
+        g.canonical_name,
+        g.display_name,
+        raw.summary,
+        g.quality_score,
+        ARRAY_AGG(STRUCT(genre.name)) AS genres,
+        ARRAY_AGG(STRUCT(platform.name)) AS platforms,
+        ARRAY_AGG(STRUCT(theme.name)) AS themes
     FROM
-        `igdb-pipeline-v3.igdb_games_dev.games`
+        `igdb-pipeline-v3.igdb_games_dev.games_raw` AS raw
+    JOIN
+        `igdb-pipeline-v3.igdb_games_dev.games` AS g
+        ON CAST(raw.id AS STRING) = g.game_id
+    LEFT JOIN
+        UNNEST(raw.genres) AS genre
+    LEFT JOIN
+        UNNEST(raw.platforms) AS platform
+    LEFT JOIN
+        UNNEST(raw.themes) AS theme
     WHERE
-        summary IS NOT NULL
+        raw.summary IS NOT NULL
+    GROUP BY
+        raw.id, g.canonical_name, g.display_name, raw.summary, g.quality_score
     ORDER BY
-        quality_score DESC
+        g.quality_score DESC
     {limit_clause}
     """
     
     logger.info("Hämtar data från BigQuery%s", f" (limit: {limit})" if limit else "")
-    return client.query(query).to_dataframe()
+    df = client.query(query).to_dataframe()
+    
+    # Konvertera strukturerade arrays till listor av namn
+    df['genres'] = df['genres'].apply(lambda x: [item['name'] for item in x] if x else [])
+    df['platforms'] = df['platforms'].apply(lambda x: [item['name'] for item in x] if x else [])
+    df['themes'] = df['themes'].apply(lambda x: [item['name'] for item in x] if x else [])
+    
+    return df
 
 
 if __name__ == "__main__":

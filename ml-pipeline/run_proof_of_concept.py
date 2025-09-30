@@ -9,7 +9,7 @@ import os
 import pandas as pd
 import logging
 import argparse
-from feature_engineering.feature_extractor import FeatureExtractor, load_games_from_bigquery
+from feature_engineering.feature_extractor import FeatureExtractor, load_games_from_local
 from feature_engineering.similarity_search import SimilaritySearch
 
 # Konfigurera loggning
@@ -22,7 +22,9 @@ def run_proof_of_concept(
     text_weight: float = 0.7,
     max_text_features: int = 5000,
     top_n: int = 10,
-    sample_games: int = 5
+    sample_games: int = 5,
+    cleaned_data_dir: str = "../data-pipeline/processing/cleaned_data",
+    raw_data_dir: str = "../data-pipeline/ingestion/data"
 ):
     """
     Kör proof of concept för rekommendationssystemet.
@@ -39,8 +41,8 @@ def run_proof_of_concept(
     os.makedirs(output_dir, exist_ok=True)
     
     # Ladda data
-    logger.info("Laddar %d spel från BigQuery...", limit)
-    games_df = load_games_from_bigquery(limit)
+    logger.info("Laddar %d spel från lokal data...", limit)
+    games_df = load_games_from_local(cleaned_data_dir, raw_data_dir, limit)
     
     # Extrahera features
     logger.info("Extraherar features...")
@@ -117,6 +119,8 @@ if __name__ == "__main__":
     parser.add_argument("--max-text-features", type=int, default=5000, help="Maximalt antal text-features")
     parser.add_argument("--top-n", type=int, default=10, help="Antal rekommendationer att visa per spel")
     parser.add_argument("--sample-games", type=int, default=5, help="Antal exempelspel att visa rekommendationer för")
+    parser.add_argument("--cleaned-data", type=str, default="../data-pipeline/processing/cleaned_data", help="Sökväg till rensad data")
+    parser.add_argument("--raw-data", type=str, default="../data-pipeline/ingestion/data", help="Sökväg till rådata")
     
     args = parser.parse_args()
     
@@ -126,5 +130,7 @@ if __name__ == "__main__":
         text_weight=args.text_weight,
         max_text_features=args.max_text_features,
         top_n=args.top_n,
-        sample_games=args.sample_games
+        sample_games=args.sample_games,
+        cleaned_data_dir=args.cleaned_data,
+        raw_data_dir=args.raw_data
     )
