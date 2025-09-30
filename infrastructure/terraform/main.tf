@@ -113,16 +113,19 @@ module "cloud_sql" {
   instance_name = var.db_instance_name
 }
 
-# Vertex AI Module - Sets up ML infrastructure
+# Vertex AI Module - Sets up ML infrastructure for batch pipelines
 module "vertex_ai" {
-  source      = "./modules/vertex_ai"
-  project_id  = var.project_id
-  environment = local.environment
-  labels      = local.labels
-  region      = var.region
+  source                = "./modules/vertex_ai"
+  project_id            = var.project_id
+  environment           = local.environment
+  labels                = local.labels
+  region                = var.region
+  service_account_email = module.iam.vertex_ai_service_account_email
+  storage_bucket        = module.storage.model_artifacts_bucket
+  bigquery_dataset      = module.bigquery.dataset_id
 }
 
-# Cloud Run Module - Sets up API service
+# Cloud Run Module - Sets up API service and batch jobs
 module "cloud_run" {
   source                = "./modules/cloud_run"
   project_id            = var.project_id
@@ -130,6 +133,8 @@ module "cloud_run" {
   labels                = local.labels
   region                = var.region
   service_account_email = module.iam.cloud_run_service_account_email
+  storage_bucket        = module.storage.model_artifacts_bucket
+  bigquery_dataset      = module.bigquery.dataset_id
 }
 
 # Monitoring Module - Sets up logging, metrics, and alerting
