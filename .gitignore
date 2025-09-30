@@ -94,3 +94,5 @@ bulk_fetch.log
 out/
 build/
 dist/
+data/full_dataset/games.json
+data-pipeline/processing/cleaned_data/games.json
