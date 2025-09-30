@@ -135,6 +135,9 @@ module "cloud_run" {
   service_account_email = module.iam.cloud_run_service_account_email
   storage_bucket        = module.storage.model_artifacts_bucket
   bigquery_dataset      = module.bigquery.dataset_id
+  raw_data_bucket       = module.storage.raw_data_bucket
+  igdb_client_id        = var.igdb_client_id
+  igdb_client_secret    = var.igdb_client_secret
 }
 
 # Monitoring Module - Sets up logging, metrics, and alerting

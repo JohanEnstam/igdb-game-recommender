@@ -41,6 +41,21 @@ variable "bigquery_dataset" {
   type        = string
 }
 
+variable "raw_data_bucket" {
+  description = "Cloud Storage bucket for raw data"
+  type        = string
+}
+
+variable "igdb_client_id" {
+  description = "IGDB API client ID"
+  type        = string
+}
+
+variable "igdb_client_secret" {
+  description = "IGDB API client secret"
+  type        = string
+}
+
 # Cloud Run service for recommendation API
 resource "google_cloud_run_v2_service" "recommendation_api" {
   name     = "igdb-recommendation-api-${var.environment}"
@@ -51,7 +66,7 @@ resource "google_cloud_run_v2_service" "recommendation_api" {
     service_account = var.service_account_email
     
     containers {
-      image = "gcr.io/${var.project_id}/igdb-recommendation-api:latest"
+        image = "europe-west1-docker.pkg.dev/igdb-pipeline-v3/igdb-recommender/igdb-recommendation-api:latest"
       
       ports {
         container_port = 8000
@@ -105,7 +120,7 @@ resource "google_cloud_run_v2_job" "feature_extraction" {
       service_account = var.service_account_email
       
       containers {
-        image = "gcr.io/${var.project_id}/igdb-feature-extraction:latest"
+        image = "europe-west1-docker.pkg.dev/igdb-pipeline-v3/igdb-recommender/igdb-feature-extraction:latest"
         
         env {
           name  = "ENVIRONMENT"
@@ -131,6 +146,64 @@ resource "google_cloud_run_v2_job" "feature_extraction" {
       }
       
       timeout = "3600s"  # 1 hour timeout for feature extraction
+    }
+  }
+
+  labels = var.labels
+}
+
+# Cloud Run job for ETL pipeline (data ingestion from IGDB API)
+resource "google_cloud_run_v2_job" "etl_pipeline" {
+  name     = "igdb-etl-pipeline-${var.environment}"
+  location = var.region
+  project  = var.project_id
+
+  template {
+    template {
+      service_account = var.service_account_email
+      
+      containers {
+        image = "europe-west1-docker.pkg.dev/igdb-pipeline-v3/igdb-recommender/igdb-etl-pipeline:latest"
+        
+        env {
+          name  = "ENVIRONMENT"
+          value = var.environment
+        }
+        
+        env {
+          name  = "PROJECT_ID"
+          value = var.project_id
+        }
+        
+        env {
+          name  = "RAW_DATA_BUCKET"
+          value = var.raw_data_bucket
+        }
+        
+        env {
+          name  = "BIGQUERY_DATASET"
+          value = var.bigquery_dataset
+        }
+        
+        env {
+          name  = "IGDB_CLIENT_ID"
+          value = var.igdb_client_id
+        }
+        
+        env {
+          name  = "IGDB_CLIENT_SECRET"
+          value = var.igdb_client_secret
+        }
+        
+        resources {
+          limits = {
+            cpu    = "2"
+            memory = "4Gi"
+          }
+        }
+      }
+      
+      timeout = "3600s"  # 1 hour timeout for ETL pipeline
     }
   }
 
@@ -164,6 +237,11 @@ output "recommendation_api_url" {
 output "feature_extraction_job_name" {
   description = "Name of the feature extraction job"
   value       = google_cloud_run_v2_job.feature_extraction.name
+}
+
+output "etl_pipeline_job_name" {
+  description = "Name of the ETL pipeline job"
+  value       = google_cloud_run_v2_job.etl_pipeline.name
 }
 
 output "status" {
