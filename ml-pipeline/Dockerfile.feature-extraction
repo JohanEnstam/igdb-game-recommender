@@ -1,0 +1,39 @@
+# Production Dockerfile for Feature Extraction (Cloud Run Job)
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy ML pipeline code
+COPY ml-pipeline/ ./ml-pipeline/
+COPY data/ ./data/
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/ml-pipeline
+
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Starting feature extraction..."\n\
+cd /app/ml-pipeline\n\
+python feature_engineering/feature_extractor.py \\\n\
+  --limit 1000 \\\n\
+  --output /app/data/features/\n\
+echo "Feature extraction completed successfully!"' > /app/entrypoint.sh
+
+RUN chmod +x /app/entrypoint.sh
+
+# Set default command (can be overridden)
+CMD ["/app/entrypoint.sh"]

@@ -1,0 +1,135 @@
+# Production Dockerfile for Recommendation API (Cloud Run Service)
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Install FastAPI and uvicorn for the API
+RUN pip install --no-cache-dir fastapi uvicorn
+
+# Copy ML pipeline code
+COPY ml-pipeline/ ./ml-pipeline/
+COPY data/ ./data/
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app/ml-pipeline
+
+# Create FastAPI application
+RUN echo 'from fastapi import FastAPI, HTTPException\n\
+from fastapi.middleware.cors import CORSMiddleware\n\
+import os\n\
+import logging\n\
+from ml_pipeline.feature_engineering.similarity_search import SimilaritySearch\n\
+from ml_pipeline.feature_engineering.feature_extractor import FeatureExtractor\n\
+\n\
+# Configure logging\n\
+logging.basicConfig(level=logging.INFO)\n\
+logger = logging.getLogger(__name__)\n\
+\n\
+app = FastAPI(title="IGDB Recommendation API", version="1.0.0")\n\
+\n\
+# Add CORS middleware\n\
+app.add_middleware(\n\
+    CORSMiddleware,\n\
+    allow_origins=["*"],\n\
+    allow_credentials=True,\n\
+    allow_methods=["*"],\n\
+    allow_headers=["*"],\n\
+)\n\
+\n\
+# Global variables for model and search\n\
+similarity_search = None\n\
+\n\
+@app.on_event("startup")\n\
+async def startup_event():\n\
+    """Load the similarity search model on startup"""\n\
+    global similarity_search\n\
+    try:\n\
+        # Load features from Cloud Storage\n\
+        storage_bucket = os.getenv("STORAGE_BUCKET")\n\
+        features_path = f"gs://{storage_bucket}/features/"\n\
+        \n\
+        logger.info(f"Loading features from {features_path}")\n\
+        \n\
+        # Initialize similarity search\n\
+        similarity_search = SimilaritySearch()\n\
+        similarity_search.load_features(features_path)\n\
+        \n\
+        logger.info("Similarity search model loaded successfully")\n\
+    except Exception as e:\n\
+        logger.error(f"Failed to load similarity search model: {e}")\n\
+        raise\n\
+\n\
+@app.get("/")\n\
+async def root():\n\
+    """Health check endpoint"""\n\
+    return {"message": "IGDB Recommendation API is running"}\n\
+\n\
+@app.get("/health")\n\
+async def health_check():\n\
+    """Detailed health check"""\n\
+    return {\n\
+        "status": "healthy",\n\
+        "model_loaded": similarity_search is not None,\n\
+        "environment": os.getenv("ENVIRONMENT", "unknown")\n\
+    }\n\
+\n\
+@app.get("/api/recommendations/{game_id}")\n\
+async def get_recommendations(game_id: str, limit: int = 10):\n\
+    """Get game recommendations"""\n\
+    if similarity_search is None:\n\
+        raise HTTPException(status_code=503, detail="Model not loaded")\n\
+    \n\
+    try:\n\
+        recommendations = similarity_search.get_similar_games(\n\
+            game_id=game_id,\n\
+            top_n=limit\n\
+        )\n\
+        return {\n\
+            "game_id": game_id,\n\
+            "recommendations": recommendations,\n\
+            "count": len(recommendations)\n\
+        }\n\
+    except Exception as e:\n\
+        logger.error(f"Error getting recommendations for {game_id}: {e}")\n\
+        raise HTTPException(status_code=500, detail=str(e))\n\
+\n\
+@app.get("/api/search")\n\
+async def search_games(query: str, limit: int = 10):\n\
+    """Search for games by name"""\n\
+    if similarity_search is None:\n\
+        raise HTTPException(status_code=503, detail="Model not loaded")\n\
+    \n\
+    try:\n\
+        # This would need to be implemented in SimilaritySearch\n\
+        # For now, return a placeholder\n\
+        return {\n\
+            "query": query,\n\
+            "results": [],\n\
+            "message": "Search functionality to be implemented"\n\
+        }\n\
+    except Exception as e:\n\
+        logger.error(f"Error searching for {query}: {e}")\n\
+        raise HTTPException(status_code=500, detail=str(e))\n\
+\n\
+if __name__ == "__main__":\n\
+    import uvicorn\n\
+    uvicorn.run(app, host="0.0.0.0", port=8000)' > /app/main.py
+
+# Expose port
+EXPOSE 8000
+
+# Run the application
+CMD ["python", "main.py"]
