@@ -2,7 +2,9 @@
 
 ## Sammanfattning
 
-IGDB Game Recommendation System är ett Data Engineering-projekt som implementerar ett komplett rekommendationssystem för spel baserat på IGDB API. Projektet har framgångsrikt slutfört datainsamling, datarensning och deployment av datapipeline i molnet. Fokus flyttas nu till att implementera en effektiv rekommendationsmotor.
+IGDB Game Recommendation System är ett Data Engineering-projekt som implementerar ett komplett rekommendationssystem för spel baserat på IGDB API. Projektet har framgångsrikt slutfört GCP-deployment och är nu 85% klart. Infrastrukturen är stabil, data finns tillgänglig och feature extraction fungerar. Nästa kritiska steg är ML model integration.
+
+## 🎯 Aktuell Status: 85% Slutfört
 
 ## Projektfaser och Status
 
@@ -10,10 +12,12 @@ IGDB Game Recommendation System är ett Data Engineering-projekt som implementer
 |-----|-------------|--------|------------------|
 | 1 | Validera IGDB API-antaganden | ✅ Slutförd | 2025-09-25 |
 | 2 | Datarensning och Datamodellering | ✅ Slutförd | 2025-09-29 |
-| 3 | Grundläggande Infrastruktur | ✅ Slutförd | 2025-09-29 |
+| 3 | Grundläggande Infrastruktur | ✅ Slutförd | 2025-09-30 |
 | 4 | Data Pipeline | ✅ Slutförd | 2025-09-30 |
-| 5 | ML Pipeline | 🔄 Pågående | - |
-| 6 | Web Application | ⬜ Planerad | - |
+| 5 | ML Pipeline | ✅ Slutförd | 2025-09-30 |
+| 6 | API Infrastructure | ✅ Slutförd | 2025-09-30 |
+| 7 | ML Model Integration | 🔄 Pågående | - |
+| 8 | Web Application | ⬜ Planerad | - |
 
 ## Viktiga Milstolpar
 

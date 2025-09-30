@@ -2,21 +2,25 @@
 
 ## Översikt
 
-Projektet har genomgått en omfattande arkitektur-revision och är nu redo för GCP-deployment. Alla komponenter är validerade lokalt och dokumentationen är uppdaterad.
+Projektet har framgångsrikt slutfört GCP-deployment och är nu 85% klart. Infrastrukturen är stabil, data finns tillgänglig och feature extraction fungerar. Nästa kritiska steg är ML model integration.
 
-## Nuvarande Status
+## 🎯 Aktuell Status: 85% Slutfört
 
 ### ✅ Klart
-- **ML-pipeline**: Optimerad och validerad (328k spel, precision@10: 0.8-1.0)
-- **Infrastruktur**: Terraform-moduler uppdaterade för Cloud Run + batch jobs
-- **Dockerfiler**: Produktions-klara och validerade lokalt
-- **Dokumentation**: Reviderad deployment-plan och arkitektur-sammanfattning
-- **Git**: Alla ändringar committade med beskrivande meddelanden
+- **GCP Infrastructure**: 40+ resurser deployade via Terraform
+- **Data Pipeline**: 24,997 spel i BigQuery med kategoriska features
+- **ML Pipeline**: Feature extraction fungerar i molnet (1,949 features)
+- **API Infrastructure**: Cloud Run service deployad och svarar
+- **Cloud Storage**: Features sparade i `gs://igdb-model-artifacts-dev/features/`
+
+### 🔄 Pågående
+- **ML Model Integration**: API använder placeholder-rekommendationer
+- **Web Application**: Frontend inte implementerad än
 
 ### 🎯 Nästa Mål
-- **GCP-deployment**: Cloud Run + batch jobs i produktion
-- **Kostnadseffektivitet**: $15-30/månad (90% besparing)
-- **Scale-to-zero**: Optimal för låg trafik
+- **ML Integration**: Koppla features till rekommendationer
+- **Web Application**: Skapa Next.js frontend
+- **Production Readiness**: Optimera prestanda och monitoring
 
 ## Praktisk Handlingsplan
 

@@ -2,7 +2,15 @@
 
 ## System Overview
 
-The IGDB Game Recommendation System is a content-based recommendation engine that uses TF-IDF text features and categorical features (genres, platforms, themes) to find similar games. The system is designed for scalability and high performance.
+The IGDB Game Recommendation System is a content-based recommendation engine that uses TF-IDF text features and categorical features (genres, platforms, themes) to find similar games. The system is deployed on GCP with Cloud Run, BigQuery, and Cloud Storage.
+
+## 🎯 Current Status: 85% Complete
+
+- ✅ **Infrastructure**: 40+ GCP resources deployed via Terraform
+- ✅ **Data Pipeline**: 24,997 games in BigQuery with categorical features
+- ✅ **ML Pipeline**: Feature extraction working in cloud (1,949 features)
+- ✅ **API Infrastructure**: Cloud Run service deployed and responding
+- 🔄 **ML Integration**: API uses placeholder recommendations
 
 ## Architecture Diagram
 
@@ -10,7 +18,7 @@ The IGDB Game Recommendation System is a content-based recommendation engine tha
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Game Data     │    │  Feature         │    │  Similarity     │
 │   (BigQuery)    │───▶│  Extraction      │───▶│  Search         │
-│   328,924 games │    │  (TF-IDF + Cat)  │    │  (Faiss)        │
+│   24,997 games  │    │  (TF-IDF + Cat)  │    │  (Faiss)        │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                 │                        │
                                 ▼                        ▼
@@ -19,6 +27,13 @@ The IGDB Game Recommendation System is a content-based recommendation engine tha
                        │  (Cloud Storage) │    │  (API Response) │
                        └──────────────────┘    └─────────────────┘
 ```
+
+## Live System
+
+- **API Endpoint**: `https://igdb-recommendation-api-dev-5wxthq523q-ew.a.run.app`
+- **BigQuery**: `igdb_games_dev.games_with_categories` (24,997 games)
+- **Features**: `gs://igdb-model-artifacts-dev/features/` (4 files)
+- **Performance**: 90s feature extraction, <2s API response
 
 ## Core Components
 

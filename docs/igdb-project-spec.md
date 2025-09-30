@@ -4,6 +4,10 @@
 
 Ett Data Engineering-projekt för kursbetyg som implementerar ett komplett rekommendationssystem för spel baserat på IGDB API. Projektet demonstrerar professionell infrastruktur, CI/CD, och ML-pipelines samtidigt som det löser ett praktiskt problem med spelrekommendationer.
 
+## 🎯 Aktuell Status: 85% Slutfört
+
+Systemet är deployat på GCP med fungerande infrastruktur, data pipeline och feature extraction. Nästa steg är ML model integration och web application.
+
 ## Korrigerade Grundförutsättningar
 
 ### IGDB API - Korrekt Förståelse

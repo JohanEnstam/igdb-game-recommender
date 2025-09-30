@@ -1,5 +1,9 @@
 # Projektets Framsteg - IGDB Game Recommendation System
 
+## 🎯 Aktuell Status: 85% Slutfört
+
+Systemet är i fas 7 (ML Model Integration) och närmar sig slutförande. Infrastrukturen är deployad och fungerar, med 24,997 spel i BigQuery och fungerande feature extraction.
+
 ## Uppnådda Milstolpar
 
 ### 1. Projektstruktur och Grundläggande Setup
