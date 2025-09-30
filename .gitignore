@@ -96,3 +96,4 @@ build/
 dist/
 data/full_dataset/games.json
 data-pipeline/processing/cleaned_data/games.json
+data-pipeline/processing/cleaned_data/*.json
