@@ -27,23 +27,24 @@ Ansvarar för datainsamling, rensning och lagring.
   - BigQuery för strukturerad data
   - Staging och production-miljöer för säker datahantering
 
-### 2. ML Pipeline (BigQuery → Vertex AI → Model Registry)
+### 2. ML Pipeline (BigQuery → Vertex AI Matching Engine)
 
-Ansvarar för att bygga och underhålla rekommendationsmodeller.
+Ansvarar för feature extraction och similarity search för rekommendationer.
 
-- **Feature Engineering**:
-  - Textanalys av spelsammanfattningar
-  - Kategoriska features från genrer, plattformar och teman
-  - Relationsbaserade features från spelgrupper och serier
+- **Feature Extraction**:
+  - TF-IDF vektorisering av spelsammanfattningar
+  - One-hot encoding av kategoriska features (genrer, plattformar, teman)
+  - Kombinerad feature-vektor för varje spel
 
-- **Modellträning**:
-  - Content-based filtering
-  - Collaborative filtering (planerad)
-  - Hybrid approach (planerad)
+- **Similarity Search**:
+  - Cosine similarity för att hitta liknande spel
+  - Faiss för lokal utveckling och testning
+  - Vertex AI Matching Engine för skalbar produktion
 
-- **Model Serving**:
-  - Vertex AI Endpoints för realtidsprediktioner
-  - Batch predictions för precomputed recommendations
+- **Recommendation Serving**:
+  - Precomputed recommendations för vanliga sökningar
+  - Real-time similarity search för dynamiska frågor
+  - Caching av resultat för optimerad prestanda
 
 ### 3. Web Application (Model + Data → User Interface)
 
@@ -132,9 +133,10 @@ Ansvarar för användarinteraktion och presentation av rekommendationer.
 
 ## Nästa Steg i Utvecklingen
 
-1. **Implementera BigQuery-schema** för den rensade datan
-2. **Utveckla Cloud Function** för att köra datarensningspipelinen
-3. **Integrera med ETL-processen** för automatiserad databehandling
+1. **Implementera feature extraction pipeline** för speldata i BigQuery
+2. **Utveckla similarity search** med Faiss och Vertex AI Matching Engine
+3. **Skapa API-endpoints** för att exponera rekommendationer
+4. **Implementera caching** för optimerad prestanda
 
 ## Relaterade Dokument
 

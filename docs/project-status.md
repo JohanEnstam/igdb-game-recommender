@@ -2,7 +2,7 @@
 
 ## Sammanfattning
 
-IGDB Game Recommendation System är ett Data Engineering-projekt som implementerar ett komplett rekommendationssystem för spel baserat på IGDB API. Projektet har framgångsrikt slutfört datainsamling och datarensning, och förbereder nu för deployment av infrastruktur i molnet.
+IGDB Game Recommendation System är ett Data Engineering-projekt som implementerar ett komplett rekommendationssystem för spel baserat på IGDB API. Projektet har framgångsrikt slutfört datainsamling, datarensning och deployment av datapipeline i molnet. Fokus flyttas nu till att implementera en effektiv rekommendationsmotor.
 
 ## Projektfaser och Status
 
@@ -11,8 +11,8 @@ IGDB Game Recommendation System är ett Data Engineering-projekt som implementer
 | 1 | Validera IGDB API-antaganden | ✅ Slutförd | 2025-09-25 |
 | 2 | Datarensning och Datamodellering | ✅ Slutförd | 2025-09-29 |
 | 3 | Grundläggande Infrastruktur | ✅ Slutförd | 2025-09-29 |
-| 4 | Data Pipeline | ✅ Slutförd | 2025-09-29 |
-| 5 | ML Pipeline | ⬜ Planerad | - |
+| 4 | Data Pipeline | ✅ Slutförd | 2025-09-30 |
+| 5 | ML Pipeline | 🔄 Pågående | - |
 | 6 | Web Application | ⬜ Planerad | - |
 
 ## Viktiga Milstolpar
@@ -45,19 +45,19 @@ IGDB Game Recommendation System är ett Data Engineering-projekt som implementer
 
 ### Kommande Milstolpar
 
-1. **Monitoring och Alerting**
+1. **ML Pipeline**
+   - ⬜ Implementera feature extraction (TF-IDF + one-hot encoding)
+   - ⬜ Utveckla similarity search med Faiss/Vertex AI Matching Engine
+   - ⬜ Optimera för skalbarhet med 300k+ spel
+
+2. **Monitoring och Alerting**
    - ⬜ Implementera Cloud Monitoring för ETL-pipelinen
    - ⬜ Skapa dashboards för övervakning av datakvalitet
    - ⬜ Konfigurera alerting för kritiska fel
 
-2. **Automatiserad Schemaläggning**
+3. **Automatiserad Schemaläggning**
    - ⬜ Sätta upp Cloud Scheduler för regelbunden datahämtning
    - ⬜ Implementera inkrementell uppdateringslogik
-
-3. **ML Pipeline**
-   - ⬜ Implementera feature engineering
-   - ⬜ Utveckla rekommendationsmodell
-   - ⬜ Sätta upp Vertex AI för modellträning och serving
 
 4. **Web Application**
    - ⬜ Utveckla backend API för rekommendationer
@@ -119,8 +119,9 @@ IGDB Game Recommendation System är ett Data Engineering-projekt som implementer
   - Logganalys
 
 - **ML Pipeline**
-  - Vertex AI för modellträning och serving
-  - Feature Store för realtidsprediktioner
+  - Feature extraction med TF-IDF och one-hot encoding
+  - Vertex AI Matching Engine för skalbar similarity search
+  - Caching av rekommendationer för snabb åtkomst
 
 ## Risker och Utmaningar
 
@@ -132,20 +133,21 @@ IGDB Game Recommendation System är ett Data Engineering-projekt som implementer
 
 ## Nästa Steg
 
-1. **Implementera Monitoring och Alerting**
+1. **Implementera Rekommendationssystem**
+   - Utveckla feature extraction pipeline
+   - Implementera similarity search med Faiss lokalt
+   - Skala upp med Vertex AI Matching Engine för hela datasetet
+   - Integrera med API för serving
+
+2. **Implementera Monitoring och Alerting**
    - Skapa Cloud Monitoring dashboards för ETL-pipelinen
    - Konfigurera alerting för kritiska fel
    - Implementera strukturerad loggning för bättre felsökning
 
-2. **Sätta upp Cloud Scheduler**
+3. **Sätta upp Cloud Scheduler**
    - Konfigurera regelbunden datahämtning från IGDB API
    - Implementera inkrementell uppdateringslogik
    - Optimera resursanvändning
-
-3. **Förbättra Felhantering och Återhämtning**
-   - Implementera robustare felhantering i Cloud Functions
-   - Konfigurera automatiska återförsök
-   - Skapa system för datavalidering
 
 ## Dokumentation och Resurser
 

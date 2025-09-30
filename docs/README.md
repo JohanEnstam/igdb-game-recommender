@@ -21,13 +21,14 @@ Dokumentationen är organiserad i följande kategorier:
 - [Testning](./development-guides/testing.md) *(planerad)*
 
 ### 4. Arkitekturdokumentation
-- [Systemarkitektur](./architecture/system-overview.md) *(planerad)*
-- [Dataflöde](./architecture/data-flow.md) *(planerad)*
+- [Systemarkitektur](./architecture/system-overview.md)
+- [Datamodell](./architecture/data-model.md)
+- [Rekommendationssystem](./architecture/recommendation-system.md)
 - [API-dokumentation](./architecture/api-docs.md) *(planerad)*
 
 ## Aktuell Projektstatus
 
-Projektet är för närvarande i **Fas 2: Datarensning och Datamodellering** och har slutfört följande huvudmilstolpar:
+Projektet är för närvarande i **Fas 5: ML Pipeline** och har slutfört följande huvudmilstolpar:
 
 - ✅ Projektstruktur och grundläggande setup
 - ✅ Terraform foundation
@@ -38,8 +39,10 @@ Projektet är för närvarande i **Fas 2: Datarensning och Datamodellering** och
 - ✅ GCP setup
 - ✅ Datainsamling och analys
 - ✅ Datarensning och datamodellering
+- ✅ Implementation av infrastruktur i molnet
+- ✅ Integration av datarensningspipeline med ETL-process
 
-Nästa steg är att implementera infrastrukturen i molnet och integrera datarensningspipelinen med ETL-processen.
+Nästa steg är att implementera rekommendationssystemet med feature extraction och similarity search.
 
 ## Viktiga Resurser
 
