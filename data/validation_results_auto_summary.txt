@@ -1,0 +1,20 @@
+REKOMMENDATION VALIDATION SUMMARY
+==================================================
+
+Total games tested: 5
+Games found: 5
+Success rate: 100.0%
+
+GAMES BY CATEGORY:
+------------------------------
+
+AAA RPG:
+  - The Witcher 3: Wild Hunt - Hearts of Stone
+  - Dark Souls II: Crown of the Old Iron King
+  - The Elder Scrolls V: Skyrim VR
+
+AAA Puzzle:
+  - ZanZarah: The Hidden Portal
+
+AAA FPS:
+  - Half-Life: Opposing Force

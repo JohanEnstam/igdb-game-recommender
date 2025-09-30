@@ -1,0 +1,1220 @@
+[
+  {
+    "query": "Witcher",
+    "category": "AAA RPG",
+    "found": true,
+    "game_id": "12503",
+    "game_name": "The Witcher 3: Wild Hunt - Hearts of Stone",
+    "game_quality_score": 100.0,
+    "game_genres": [
+      "Role-playing (RPG)",
+      "Adventure"
+    ],
+    "game_platforms": [
+      "Xbox Series X|S",
+      "PlayStation 4",
+      "PC (Microsoft Windows)",
+      "PlayStation 5",
+      "Xbox One",
+      "Nintendo Switch"
+    ],
+    "game_themes": [
+      "Action",
+      "Fantasy",
+      "Open world"
+    ],
+    "game_summary": "The Witcher 3: Wild Hunt – Hearts of Stone is the first major expansion for The Witcher 3: Wild Hunt, released in October 2015. It adds a new storyline set in the existing game world, where Geralt is hired to deal with Olgierd von Everec, a nobleman with a mysterious and cursed past.\n\nThe expansion introduces new characters, quests, enemies, and the Runewords system, which enhances gear with powerful effects. It emphasises narrative depth and moral choices, consistent with the tone of the main game.",
+    "recommendations": [
+      {
+        "game_id": "13166",
+        "display_name": "The Witcher 3: Wild Hunt - Blood and Wine",
+        "summary": "Blood and Wine is the second major expansion to The Witcher 3: Wild Hunt.\n\nThe players will accompany Geralt of Rivia to the region of Toussaint, one of the few places in the Witcher universe which has remained largely untouched by the war. The calm, laid-back atmosphere holds a dark and bloody secret that only the White Wolf can uncover; the expansion features new items for players to collect on their adventure and introduces previously unknown characters.",
+        "similarity_score": 0.49610763788223267,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "157580",
+        "display_name": "The Witcher 3: Wild Hunt - New Quest 'Contract: Skellige's Most Wanted'",
+        "summary": "The Witcher 3: Wild Hunt – New Quest 'Contract: Skellige's Most Wanted' is a free DLC quest released in June 2015. It adds a new Witcher contract set on the Skellige Isles, where Geralt is hired to track down a dangerous creature responsible for attacking travelers.",
+        "similarity_score": 0.470523864030838,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "214735",
+        "display_name": "Nobody Saves the World: Frozen Hearth",
+        "summary": "The first expansion for Nobody Saves the World introduces new challenges, player forms, and abilities.",
+        "similarity_score": 0.46345338225364685,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure",
+          "Indie"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "366898",
+        "display_name": "Mega Man Star Force: Legacy Collection",
+        "summary": null,
+        "similarity_score": 0.4459957480430603,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "170449",
+        "display_name": "The Witcher 3: Wild Hunt - New Quest 'Where the Cat and Wolf Play...'",
+        "summary": "The Witcher 3: Wild Hunt – New Quest \"Where the Cat and Wolf Play...\" is a free DLC quest released in July 2015. In this quest, Geralt investigates a village whose inhabitants have been mysteriously killed. The story centers on a confrontation with a Witcher from the School of the Cat and introduces choices that affect the outcome of the mission.\n\nIt adds a new standalone side quest with unique dialogue, a new location, and narrative ties to the broader Witcher lore.",
+        "similarity_score": 0.4440656900405884,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "152911",
+        "display_name": "One Piece: World Seeker Episode Pass",
+        "summary": null,
+        "similarity_score": 0.44249773025512695,
+        "quality_score": 55.55555555555556,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "303531",
+        "display_name": "Fortnite: Crimson Warden Pack",
+        "summary": null,
+        "similarity_score": 0.43183353543281555,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Shooter",
+          "Role-playing (RPG)",
+          "Simulator",
+          "Strategy",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action",
+          "Survival",
+          "Sandbox",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "331701",
+        "display_name": "Fortnite: Storm-Wild Raven Starter Pack",
+        "summary": null,
+        "similarity_score": 0.43183353543281555,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Shooter",
+          "Role-playing (RPG)",
+          "Simulator",
+          "Strategy",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action",
+          "Survival",
+          "Sandbox",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "28366",
+        "display_name": "Nioh: Dragon of the North",
+        "summary": "Nioh: Dragon of the North is the first DLC expansion for the action role-playing game Nioh, developed by Team Ninja and published by Koei Tecmo. Released in May 2017, this expansion introduces new story content set in the Oshu region, focusing on the powerful warlord Date Masamune. It adds new main missions, sub-missions, and Twilight missions, expanding the game's narrative and challenges. Players encounter new enemies and formidable bosses, along with various new yokai. The expansion also features additional weapons, armour sets, and guardian spirits, providing more options for character customisation and combat.",
+        "similarity_score": 0.42346519231796265,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Hack and slash/Beat 'em up",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Historical"
+        ]
+      },
+      {
+        "game_id": "291950",
+        "display_name": "Double Dragon Gaiden: Rise of the Dragons - Sacred Reunion",
+        "summary": null,
+        "similarity_score": 0.42310869693756104,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Hack and slash/Beat 'em up",
+          "Adventure",
+          "Arcade"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One",
+          "Nintendo Switch"
+        ],
+        "themes": [
+          "Action"
+        ]
+      },
+      {
+        "game_id": "301578",
+        "display_name": "Persona 3 Reload: Persona 4 Golden Persona Set",
+        "summary": null,
+        "similarity_score": 0.42310869693756104,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)",
+          "Strategy",
+          "Turn-based strategy (TBS)",
+          "Adventure"
+        ],
+        "platforms": [
+          "Xbox Series X|S",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "PlayStation 5",
+          "Xbox One"
+        ],
+        "themes": [
+          "Fantasy"
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Dark Souls",
+    "category": "AAA RPG",
+    "found": true,
+    "game_id": "22502",
+    "game_name": "Dark Souls II: Crown of the Old Iron King",
+    "game_quality_score": 100.0,
+    "game_genres": [
+      "Role-playing (RPG)",
+      "Adventure"
+    ],
+    "game_platforms": [
+      "PlayStation 3",
+      "PC (Microsoft Windows)",
+      "Xbox 360"
+    ],
+    "game_themes": [
+      "Action",
+      "Fantasy"
+    ],
+    "game_summary": "Dark Souls II: Crown of the Old Iron King is the second DLC expansion for Dark Souls II, released in August 2014. It takes players to Brume Tower, a massive, decrepit structure filled with new enemies, challenging bosses, and treacherous environments. The expansion adds new weapons, armour, and spells, as well as additional lore that delves into the history of the Old Iron King.",
+    "recommendations": [
+      {
+        "game_id": "20341",
+        "display_name": "Dark Souls II: Crown of the Ivory King",
+        "summary": "Dark Souls II: Crown of the Ivory King is the third DLC expansion for Dark Souls II, released in September 2014. It transports players to the frozen wasteland of Eleum Loyce, where they face new enemies, perilous environments, and challenging bosses. The expansion adds new weapons, armour, and spells, along with additional lore detailing the history of the Ivory King and his kingdom.",
+        "similarity_score": 0.8276688456535339,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "19924",
+        "display_name": "Dark Souls II: Crown of the Sunken King",
+        "summary": "Dark Souls II: Crown of the Sunken King is the first DLC expansion for Dark Souls II, released in July 2014. It takes players to the subterranean city of Shulva, an ancient, sunken city filled with new enemies, intricate traps, and formidable bosses. The expansion introduces new weapons, armour, and spells, as well as additional lore that explores the history of the Sunken King.",
+        "similarity_score": 0.7764613032341003,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "8222",
+        "display_name": "Dark Souls II: Scholar of the First Sin",
+        "summary": "Dark Souls II: Scholar of the First Sin is an enhanced edition of Dark Souls II, released in April 2015 by FromSoftware and Bandai Namco Entertainment. This version includes updated graphics, improved performance, and all previously released DLC expansions (Crown of the Sunken King, Crown of the Old Iron King, and Crown of the Ivory King). It also features rebalanced gameplay, new enemy placements, additional NPCs, and expanded lore,",
+        "similarity_score": 0.6260795593261719,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox 360",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "23158",
+        "display_name": "Dark Souls III: Ashes of Ariandel",
+        "summary": "Dark Souls III: Ashes of Ariandel is the first DLC expansion for Dark Souls III, released in October 2016. It introduces the Painted World of Ariandel, a new, snowy environment filled with challenging enemies and tough bosses. The expansion also adds new weapons, armour, spells, and a PvP arena. Ashes of Ariandel expands on the game's lore, exploring themes of corruption and the decay of painted worlds.",
+        "similarity_score": 0.5187086462974548,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "144500",
+        "display_name": "Dark Souls: Daughters of Ash",
+        "summary": "Dark Souls: Daughters of Ash is an unofficial re-imagining and expansion of Dark Souls. It features new bosses, enemies, characters, storylines, weapons, and items, expanded lore, and many new secrets. It offers modified and brand-new content, much of which cannot be discovered in one playthrough.",
+        "similarity_score": 0.5068479776382446,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "26916",
+        "display_name": "Dark Souls III: The Ringed City",
+        "summary": "Dark Souls III: The Ringed City is the second DLC expansion for Dark Souls III, released in March 2017. It introduces the Ringed City, a new area at the world's edge where the Age of Fire is ending. The expansion includes new environments, enemies, bosses, and items like weapons, armour, and spells. The content further explores the game's lore, focusing on the themes of decay and the cyclical nature of the world.",
+        "similarity_score": 0.48531895875930786,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 4",
+          "PC (Microsoft Windows)",
+          "Xbox One"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "2155",
+        "display_name": "Dark Souls",
+        "summary": "Dark Souls is an action role-playing game developed by FromSoftware and published by Bandai Namco Entertainment. Released in September 2011 as a spiritual sequel to Demon's Souls, it is set in a dark, medieval fantasy world. It is renowned for its challenging gameplay, intricate level design, and deep lore. Players control a customizable character known as the Chosen Undead, embarking on a perilous journey to uncover the secrets of the cursed land of Lordran.\n\nDark Souls is known for its punishing difficulty, requiring players to carefully manage combat, stamina, and resources while navigating hostile environments filled with dangerous enemies and formidable bosses. The game features a unique multiplayer component, allowing players to leave messages for others, summon allies for cooperative play, or invade other players' worlds for PvP combat.\n\nThe original release of Dark Souls received critical acclaim for its atmospheric world, innovative mechanics, and rewarding gameplay, solidifying its place as a seminal title in the action RPG genre.",
+        "similarity_score": 0.4836752414703369,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "194724",
+        "display_name": "Dark Souls II: Augur of Darkness",
+        "summary": "Dark Souls II: Augur of Darkness is a comprehensive overhaul mod for Dark Souls II: Scholar of the First Sin. This mod aims to significantly alter the gameplay experience by introducing new enemy placements, rebalancing combat, and modifying item locations. It enhances difficulty by adjusting enemy AI and attack patterns, creating a more challenging environment. The mod also adds new weapons, armour sets, and spells, expanding the game's customisation options. Additionally, Augur of Darkness includes changes to level design and boss encounters",
+        "similarity_score": 0.47299960255622864,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "292062",
+        "display_name": "Dark Souls: Archthrones",
+        "summary": "Dark Souls: Archthrones is a fan-made mod for Dark Souls that aims to enhance and expand the original game. It introduces new content, such as additional weapons, armour, spells, and items. The mod also rebalances gameplay elements, updates enemy placements, and adds new areas to explore.",
+        "similarity_score": 0.4665030241012573,
+        "quality_score": 75.55555555555556,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "21988",
+        "display_name": "Dark Souls: Artorias of the Abyss",
+        "summary": "Artorias of the Abyss is additional content for the game Dark Souls. It was originally released for PC as part of the Dark Souls: Prepare to Die Edition, and later for consoles as the eponymous DLC. A console version of the Prepare To Die Edition was also released at a later date.",
+        "similarity_score": 0.4601876139640808,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "20631",
+        "display_name": "EverQuest II: Echoes of Faydwer",
+        "summary": "The second expansion to EverQuest II.",
+        "similarity_score": 0.4590927064418793,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Fantasy"
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Skyrim",
+    "category": "AAA RPG",
+    "found": true,
+    "game_id": "37088",
+    "game_name": "The Elder Scrolls V: Skyrim VR",
+    "game_quality_score": 100.0,
+    "game_genres": [
+      "Role-playing (RPG)",
+      "Adventure"
+    ],
+    "game_platforms": [
+      "PlayStation VR",
+      "PC (Microsoft Windows)"
+    ],
+    "game_themes": [
+      "Action",
+      "Fantasy",
+      "Stealth",
+      "Sandbox",
+      "Open world"
+    ],
+    "game_summary": "A true, full-length open-world game for VR has arrived. Skyrim VR reimagines the complete epic fantasy masterpiece with an unparalleled sense of scale, depth, and immersion. From battling ancient dragons to exploring rugged mountains and more, Skyrim VR brings to life a complete open world for you to experience any way you choose. Skyrim VR includes the critically-acclaimed core game and official add-ons – Dawnguard, Hearthfire, and Dragonborn.",
+    "recommendations": [
+      {
+        "game_id": "130270",
+        "display_name": "Open World Game: The Open World Game",
+        "summary": "Open World Game: the Open World Game is the purest open world game experience. We broke open world games down to their core so you don't have to deal with any more gorgeous 3D environments distracting you, stellar voice acting performances drawing you in, or even a prolonged epic Main Quest constantly weighing you down for ignoring it in lieu of collecting every card in that mini game. Just pure unadulterated open world game... game.",
+        "similarity_score": 0.46006879210472107,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure",
+          "Indie"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Fantasy",
+          "Comedy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "155078",
+        "display_name": "Kingdom Come: Deliverance - Royal DLC Package",
+        "summary": null,
+        "similarity_score": 0.4576043486595154,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Historical",
+          "Stealth",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "472",
+        "display_name": "The Elder Scrolls V: Skyrim",
+        "summary": "Skyrim reimagines and revolutionizes the open-world fantasy epic, bringing to life a complete virtual world open for you to explore any way you choose. Play any type of character you can imagine, and do whatever you want; the legendary freedom of choice, storytelling, and adventure of The Elder Scrolls is realized like never before.",
+        "similarity_score": 0.44321364164352417,
+        "quality_score": 100.0,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PC (Microsoft Windows)",
+          "Xbox 360"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Stealth",
+          "Sandbox",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "127172",
+        "display_name": "月牙楼风云",
+        "summary": "月牙楼风云 is an open-world ARPG game.",
+        "similarity_score": 0.4197152256965637,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)",
+          "Indie"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action"
+        ]
+      },
+      {
+        "game_id": "207464",
+        "display_name": "Sail",
+        "summary": "Open World VR Pirate Adventure Game!",
+        "similarity_score": 0.41457489132881165,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter",
+          "Role-playing (RPG)",
+          "Simulator",
+          "Adventure"
+        ],
+        "platforms": [
+          "SteamVR",
+          "Oculus Quest"
+        ],
+        "themes": [
+          "Action"
+        ]
+      },
+      {
+        "game_id": "127646",
+        "display_name": "Defend the Night",
+        "summary": null,
+        "similarity_score": 0.41344913840293884,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "358320",
+        "display_name": "All the Mario",
+        "summary": null,
+        "similarity_score": 0.41344913840293884,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Sandbox"
+        ]
+      },
+      {
+        "game_id": "313477",
+        "display_name": "Pack not Found 404",
+        "summary": null,
+        "similarity_score": 0.41344913840293884,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Sandbox"
+        ]
+      },
+      {
+        "game_id": "116081",
+        "display_name": "Moonstone Crossroads",
+        "summary": "Moonstone Crossroads is an open world VR game filled with various activities such as farming, hunting, mini-games, climbing, and more! It is a new in-depth VR world experience!",
+        "similarity_score": 0.4112403988838196,
+        "quality_score": 73.33333333333333,
+        "genres": [
+          "Simulator",
+          "Adventure",
+          "Indie"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action"
+        ]
+      },
+      {
+        "game_id": "52602",
+        "display_name": "Natsuiro High School: Seishun Hakusho",
+        "summary": "Open world photography game from D3 Publisher.",
+        "similarity_score": 0.41091659665107727,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PlayStation 3",
+          "PlayStation 4"
+        ],
+        "themes": [
+          "Action",
+          "Stealth",
+          "Comedy",
+          "Open world",
+          "Romance"
+        ]
+      },
+      {
+        "game_id": "214852",
+        "display_name": "Ravenbound",
+        "summary": "Fear everything and nothing for death brings you closer to victory in this challenging open world action-roguelite. As the Vessel of an ancient power you must use steel and skill to complete your mission in a dangerous fantasy world inspired by Scandinavian folklore.",
+        "similarity_score": 0.40940725803375244,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Role-playing (RPG)"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Sandbox",
+          "Open world"
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Portal",
+    "category": "AAA Puzzle",
+    "found": true,
+    "game_id": "18327",
+    "game_name": "ZanZarah: The Hidden Portal",
+    "game_quality_score": 100.0,
+    "game_genres": [
+      "Role-playing (RPG)",
+      "Adventure"
+    ],
+    "game_platforms": [
+      "PC (Microsoft Windows)"
+    ],
+    "game_themes": [
+      "Action",
+      "Fantasy",
+      "Open world"
+    ],
+    "game_summary": "The legends speak of a long forgotten prophecy... of a shining hero and of perilous adventures... of sinister powers, strange worlds and swarms of fairies ... but they said nothing of a girl with a big heart instead of a big sword!",
+    "recommendations": [
+      {
+        "game_id": "127646",
+        "display_name": "Defend the Night",
+        "summary": null,
+        "similarity_score": 0.5063697695732117,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Fantasy",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "155078",
+        "display_name": "Kingdom Come: Deliverance - Royal DLC Package",
+        "summary": null,
+        "similarity_score": 0.48038455843925476,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy",
+          "Historical",
+          "Stealth",
+          "Open world"
+        ]
+      },
+      {
+        "game_id": "360181",
+        "display_name": "Pokémon Lost World: Echoes of Eternity",
+        "summary": null,
+        "similarity_score": 0.4622502326965332,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Role-playing (RPG)",
+          "Turn-based strategy (TBS)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "63826",
+        "display_name": "Wizardry Empire: Princess of the Ancient",
+        "summary": null,
+        "similarity_score": 0.4622502326965332,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)",
+          "PlayStation"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "337776",
+        "display_name": "Realms of the Forgotten",
+        "summary": null,
+        "similarity_score": 0.4622502326965332,
+        "quality_score": 42.22222222222222,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure",
+          "Indie"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "322151",
+        "display_name": "World of Warcraft: Mists of Pandaria Classic",
+        "summary": null,
+        "similarity_score": 0.4622502326965332,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)",
+          "Mac"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "203026",
+        "display_name": "Project Household",
+        "summary": null,
+        "similarity_score": 0.4529108703136444,
+        "quality_score": 51.11111111111112,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "281393",
+        "display_name": "Relics: The 2nd Birth",
+        "summary": null,
+        "similarity_score": 0.4529108703136444,
+        "quality_score": 71.1111111111111,
+        "genres": [
+          "Role-playing (RPG)"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "315029",
+        "display_name": "Project Dream 64",
+        "summary": null,
+        "similarity_score": 0.4529108703136444,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "92299",
+        "display_name": "Mill",
+        "summary": null,
+        "similarity_score": 0.4529108703136444,
+        "quality_score": 35.55555555555555,
+        "genres": [
+          "Role-playing (RPG)",
+          "Adventure"
+        ],
+        "platforms": [],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      },
+      {
+        "game_id": "313393",
+        "display_name": "Mubble",
+        "summary": null,
+        "similarity_score": 0.4529108703136444,
+        "quality_score": 57.777777777777786,
+        "genres": [
+          "Adventure"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Fantasy"
+        ]
+      }
+    ]
+  },
+  {
+    "query": "Half-Life",
+    "category": "AAA FPS",
+    "found": true,
+    "game_id": "232",
+    "game_name": "Half-Life: Opposing Force",
+    "game_quality_score": 100.0,
+    "game_genres": [
+      "Shooter",
+      "Platform",
+      "Puzzle"
+    ],
+    "game_platforms": [
+      "Linux",
+      "PC (Microsoft Windows)",
+      "Mac"
+    ],
+    "game_themes": [
+      "Action",
+      "Science fiction",
+      "Thriller",
+      "Warfare"
+    ],
+    "game_summary": "Opposing Force returns to the same setting as Half-Life, but instead portrays the events from the perspective of a U.S. Marine, one of the enemy characters in the original game. The player character, Adrian Shephard, is sent in to neutralize the Black Mesa Research Facility after a scientific mishap causes it to be invaded by aliens, but quickly finds that the Marines are outnumbered and slowly being beaten back by a second alien race and black operations units.",
+    "recommendations": [
+      {
+        "game_id": "6740",
+        "display_name": "Operation: Black Mesa",
+        "summary": "Experience the Half-Life expansion packs like never before. Operation: Black Mesa features reimaginings of both Half-Life: Opposing Force and Half-Life: Blue Shift through two unique campaigns. How will you survive the Black Mesa Incident? It's time to choose.",
+        "similarity_score": 0.5172157883644104,
+        "quality_score": 75.55555555555556,
+        "genres": [
+          "Shooter",
+          "Platform",
+          "Puzzle",
+          "Indie"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction",
+          "Thriller",
+          "Warfare"
+        ]
+      },
+      {
+        "game_id": "6738",
+        "display_name": "Half-Life: Decay",
+        "summary": "Half-Life: Decay is an expansion pack for Valve Software's science fiction, first-person shooter video game Half-Life. Developed by Gearbox Software and published by Sierra Entertainment, Decay was released as part of the PlayStation 2 version of Half-Life. It is the third expansion pack for Half-Life, and like its predecessors, Decay returns to the setting and timeline of the original story, albeit portraying the story from the viewpoint of a different set of protagonists: two scientists working in the Black Mesa Research Facility. Decay is a cooperative multiplayer game, designed to be played by two people working together to pass through the game's levels.\n\nIn September 2008, a group of Ukrainian developers unofficially ported the game to Windows as a modification of the PC version of Half-Life.",
+        "similarity_score": 0.4358026385307312,
+        "quality_score": 100.0,
+        "genres": [
+          "Shooter",
+          "Platform",
+          "Puzzle"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)",
+          "PlayStation 2"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "2549",
+        "display_name": "Half-Life: Blue Shift",
+        "summary": "Half-Life: Blue Shift is an expansion pack for Valve Software's science fiction first-person shooter video game Half-Life. The game was developed by Gearbox Software with Valve Corporation and published by Sierra Entertainment on June 12, 2001. (It was originally set for release in Spring.) Blue Shift is the second expansion for Half-Life, originally intended as part of a Dreamcast version of the original game. Although the Dreamcast port was later cancelled, the PC version continued development and was released as a standalone product. The game was released on Steam on August 24, 2005.",
+        "similarity_score": 0.43388956785202026,
+        "quality_score": 100.0,
+        "genres": [
+          "Shooter",
+          "Platform",
+          "Puzzle"
+        ],
+        "platforms": [
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction",
+          "Warfare"
+        ]
+      },
+      {
+        "game_id": "6744",
+        "display_name": "Half-Life: Source",
+        "summary": "Half-Life: Source is a port of Valve's original acclaimed game Half-Life to their new Source engine used for Half-Life 2.\n\nIt takes advantage of vertex and pixel shaders to create realistic water effects, and can now portray realistic physics effects. It also has new menus, improved lighting and soft shadows, ragdoll character animations, and a 3D skybox replacing the old 16-bit color prerendered bitmap skies.",
+        "similarity_score": 0.43346625566482544,
+        "quality_score": 100.0,
+        "genres": [
+          "Shooter",
+          "Platform",
+          "Puzzle",
+          "Adventure"
+        ],
+        "platforms": [
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction",
+          "Horror",
+          "Thriller",
+          "Warfare"
+        ]
+      },
+      {
+        "game_id": "221652",
+        "display_name": "Sweet Half-Life",
+        "summary": "Sweet Half-Life is a single player science fiction and Manga-based Mod of Valve's first-person shooter Half-Life, set at a similar time to the original game and following a similar storyline. It is played through the eyes of Gordon McGinley, and follows his plight to escape from the crumbling Black Mesa Research Facility.\n\nIt includes 3 new weapons and 5 new enemies.",
+        "similarity_score": 0.4296320080757141,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)",
+          "Mac"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "196017",
+        "display_name": "Black Mesa: Blue Shift",
+        "summary": "Initially developed and released by Gearbox Software in 2001, second Half-Life add-on, Half-Life: Blue Shift is a return to the Black Mesa Research Facility and another look at the Incident's consequences from the eyes of Gordon Freeman's best friend - Barney Calhoun. In 2012, Crowbar Collective has delighted Half-Life fans with release of the magnificent Half-Life remake, but there are still no released remakes for add-ons. This is when they are coming in - HECU Collective are developing the Black Mesa: Blue Shift - a free remake with use of Black Mesa resources and style.",
+        "similarity_score": 0.4294847249984741,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "Linux",
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "196731",
+        "display_name": "Half-Life: Field Intensity",
+        "summary": "Half-Life: Field Intensity is a mod for the original Half-Life (1998) that has been in the works for 13 years. You play as HECU soldier Stefan Oldfield who was sent to the Black Mesa Research Facility to silence the scientists working there after the resonance cascade. It features 5-10 hours of game-play and 34 maps in total.",
+        "similarity_score": 0.4268549978733063,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "284040",
+        "display_name": "Pico Life",
+        "summary": "Pico Life is a demake of Half-Life in PICO-8.",
+        "similarity_score": 0.41462084650993347,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "Web browser",
+          "Linux",
+          "PC (Microsoft Windows)",
+          "Mac"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "362133",
+        "display_name": "Peer Review",
+        "summary": "Peer Review is a reboot of Half-Life's third and final expansion, Half-Life: Decay. Return to the Black Mesa Research Facility and relive the chaos from the perspectives of Dr. Cross and Dr. Green. With all missions from the original game and fully functional co-op, Peer Review aims to give a fresh take on classic Half-Life that you can enjoy with a friend.",
+        "similarity_score": 0.4109429717063904,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action"
+        ]
+      },
+      {
+        "game_id": "252806",
+        "display_name": "Half-Life: Hostile Takeover",
+        "summary": "Half-Life: Hostile Takeover is a cancelled Half-Life expansion pack. It was planned to be the second expansion after Opposing Force.",
+        "similarity_score": 0.40990838408470154,
+        "quality_score": 75.55555555555556,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      },
+      {
+        "game_id": "284731",
+        "display_name": "Hazardous Materials",
+        "summary": "You are Gordon Freeman...\n\nIt was a normal working day. Scattered Xen aliens were hiding even in the rear corners of the Black Mesa research facility.\nIt slowly return normality in everyday work. The old not been destroyed buildings have been modernized slowly.\n\nYou return from a normal disposal order, as in parts of the institution the power goes out. Power generators to keep running on the main equipment and and your mission is to restore the energy supply. On the half way you notice more and more Xen returnes to Black Mesa and the military is back ...\n\nUncover a new, exciting plot in the Half-Life universe!",
+        "similarity_score": 0.40622562170028687,
+        "quality_score": 88.88888888888889,
+        "genres": [
+          "Shooter"
+        ],
+        "platforms": [
+          "PC (Microsoft Windows)"
+        ],
+        "themes": [
+          "Action",
+          "Science fiction"
+        ]
+      }
+    ]
+  }
+]
