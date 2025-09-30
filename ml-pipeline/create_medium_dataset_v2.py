@@ -229,8 +229,8 @@ def analyze_dataset(games: List[Dict[str, Any]]) -> None:
                    summary_lengths.mean())
 
 def main():
-    """Huvudfunktion för att skapa mellanstort dataset."""
-    parser = argparse.ArgumentParser(description="Skapa mellanstort dataset för optimering")
+    """Huvudfunktion för att skapa dataset med kategoriska features."""
+    parser = argparse.ArgumentParser(description="Skapa dataset med kategoriska features")
     parser.add_argument("--cleaned-data", type=str, 
                        default="data-pipeline/processing/cleaned_data/games.json",
                        help="Sökväg till rensad data")
@@ -240,16 +240,19 @@ def main():
     parser.add_argument("--output", type=str, 
                        default="data/medium_dataset/games.json",
                        help="Sökväg till output dataset")
-    parser.add_argument("--size", type=int, default=25000,
-                       help="Storlek på dataset (default: 25000)")
+    parser.add_argument("--size", type=int, default=None,
+                       help="Storlek på dataset (None för alla spel)")
     
     args = parser.parse_args()
     
     # Ladda hela datasetet med kategoriska features
     games = load_full_dataset_with_features(args.cleaned_data, args.raw_data_dir)
     
-    # Skapa stratifierat urval
-    sampled_games = create_stratified_sample(games, args.size)
+    # Skapa urval om size är specificerat
+    if args.size is not None:
+        sampled_games = create_stratified_sample(games, args.size)
+    else:
+        sampled_games = games
     
     # Analysera dataset
     analyze_dataset(sampled_games)

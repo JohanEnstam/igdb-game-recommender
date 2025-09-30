@@ -68,6 +68,32 @@ Mycket bättre resultat:
 - ✅ **Bra**: Chronon, Breaking Box: Rush! (puzzle/indie)
 - ✅ **Konsistent tema**: Nästan alla rekommendationer är puzzle/indie-spel
 
+## Fördjupad analys: Handlingsbar signal vs sannolika false-positives
+
+### Handlingsbar signal (agera på nu)
+- **Puzzle/Indie har hög precision** (Portal, Celeste): parametrarna fungerar väl här. Behåll text_weight ≈ 0.6 och n-gram (1,2).
+- **FPS (Half-Life) konsekvent bra**: genre-/temalikhet fångas väl. Indikerar att kategoriska features bär vikt på rätt sätt.
+- **Zelda/Adventure rimligt**: flera träffar inom IP/tema. Bra signal att IP-närhet och adventure-tema hittas.
+- **Hollow Knight: expansions hittas**: IP-närhet fungerar när expansions/titlar finns i datasetet.
+
+### Sannolika false-positives (observations, inte optimera för ännu)
+- **RPG (Witcher, Dark Souls) blandade träffar**: text-bigrams kan över-matcha generiska RPG-termer → leder till Pokémon/TBS-spel. Detta är ett känt content-based-problem, inte akut att finjustera innan bredare validering.
+- **Sandbox (Minecraft) delvis off-topic**: vissa sim-/casual-titlar dyker upp. Sannolikt p.g.a. textligheter och svag genre-separation i vissa råposter.
+- **Språkblandning (kinesiska titlar)**: påverkar inte algoritmen fundamentalt men kan ge udda matchningar visuellt. Bra framtida förbättring, ej kritisk nu.
+- **Fel träff vid namn-sök (GTA)**: strängmatchningen valde fel spel. Detta är ett UI/sökproblem, inte embeddings-problem.
+
+### Praktiska slutsatser av testet
+- Behåll nuvarande parametrar för nästa steg av validering (text_weight=0.6, max_features=5000, min_df=5, n-gram=(1,2)).
+- Fokus på fler manuell-tester för RPG och Sandbox där signalen är blandad, innan vi lägger tid på fin-skalning.
+- Dokumentera precision@k per kategori (Puzzle, FPS, RPG, Sandbox) för att styra nästa optimeringsvåg.
+
+## Backlog för framtida förbättringar (ej akuta nu)
+- Språkdetektor och språksegmentering (t.ex. separata index för EN/icke-EN).
+- Förbättrad namn-/IP-sök (fuzzy match, prioritering av kända franchises) före rekommendationsfråga.
+- Genre-viktning per kategori (t.ex. öka vikt för exakta genreträffar i RPG/Sandbox).
+- Popularitets-/quality_score-rerank ovanpå similarity (hybrid content+popularity).
+- Lätt negativ sampling mot generiska termer i text (t.ex. minska vikt för "RPG", "adventure" när de är alltför generiska).
+
 ## Nästa Steg
 
 ### 1. Validera Rekommendationskvalitet (Pågående)
