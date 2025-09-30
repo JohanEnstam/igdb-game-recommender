@@ -16,17 +16,27 @@ logger = logging.getLogger(__name__)
 class SimilaritySearch:
     """Implementerar similarity search för att hitta liknande spel."""
     
-    def __init__(self, features: Dict[str, Any]):
+    def __init__(self, combined_features: Any = None, features: Dict[str, Any] = None):
         """
         Initierar SimilaritySearch.
         
         Args:
-            features: Dictionary med features och metadata från FeatureExtractor
+            combined_features: Sparse matrix med kombinerade features (om features inte ges)
+            features: Dictionary med features och metadata från FeatureExtractor (alternativt)
         """
-        self.features = features
-        self.combined_features = features['combined_features']
-        self.id_mapping = features['id_mapping']
-        self.reverse_mapping = features['reverse_mapping']
+        if features is not None:
+            self.features = features
+            self.combined_features = features['combined_features']
+            self.id_mapping = features['id_mapping']
+            self.reverse_mapping = features['reverse_mapping']
+        elif combined_features is not None:
+            self.combined_features = combined_features
+            self.features = None
+            self.id_mapping = None
+            self.reverse_mapping = None
+        else:
+            raise ValueError("Antingen features eller combined_features måste anges")
+        
         self.index = None
         
     def build_index(self) -> None:
@@ -50,6 +60,31 @@ class SimilaritySearch:
         
         logger.info("Faiss-index byggt med %d vektorer", self.index.ntotal)
     
+    def find_similar(self, game_idx: int, top_n: int = 10) -> List[Tuple[int, float]]:
+        """
+        Hämtar liknande spel baserat på index.
+        
+        Args:
+            game_idx: Index för spelet att hitta liknande spel för
+            top_n: Antal rekommendationer att returnera
+            
+        Returns:
+            Lista med tupler innehållande (index, similarity_score)
+        """
+        if self.index is None:
+            self.build_index()
+        
+        # Hämta feature vector för spelet
+        query_vector = self.index.reconstruct(game_idx).reshape(1, -1)
+        
+        # Sök efter liknande spel
+        distances, indices = self.index.search(query_vector, top_n + 1)
+        
+        # Konvertera till lista med tupler (index, score)
+        results = [(int(indices[0][i]), float(distances[0][i])) for i in range(len(indices[0]))]
+        
+        return results[:top_n + 1]
+    
     def get_similar_games(self, game_id: str, top_n: int = 10) -> List[Dict[str, Any]]:
         """
         Hämtar liknande spel baserat på similarity search.
@@ -64,7 +99,7 @@ class SimilaritySearch:
         if self.index is None:
             self.build_index()
         
-        if game_id not in self.reverse_mapping:
+        if not self.reverse_mapping or game_id not in self.reverse_mapping:
             logger.warning("Game ID %s finns inte i datasetet", game_id)
             return []
         
@@ -82,10 +117,10 @@ class SimilaritySearch:
         for i in range(len(indices[0])):
             idx = indices[0][i]
             if idx != game_idx:  # Exkludera query-spelet
-                game_id = self.id_mapping[idx]
+                game_id_rec = self.id_mapping[idx]
                 similarity = float(distances[0][i])
                 recommendations.append({
-                    'game_id': game_id,
+                    'game_id': game_id_rec,
                     'similarity_score': similarity
                 })
         
