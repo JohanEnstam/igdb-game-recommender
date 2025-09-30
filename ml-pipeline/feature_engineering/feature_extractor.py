@@ -79,9 +79,24 @@ class FeatureExtractor:
         from scipy.sparse import csr_matrix
         
         # Förbehandla listor och kontrollera att de är listor
-        genres = games_df['genres'].apply(lambda x: [] if not isinstance(x, list) else x)
-        platforms = games_df['platforms'].apply(lambda x: [] if not isinstance(x, list) else x)
-        themes = games_df['themes'].apply(lambda x: [] if not isinstance(x, list) else x)
+        # BigQuery returnerar numpy arrays, konvertera till listor
+        def parse_list(x):
+            if isinstance(x, list):
+                return x
+            elif hasattr(x, 'tolist'):  # numpy array
+                return x.tolist()
+            elif isinstance(x, str):
+                try:
+                    import json
+                    return json.loads(x) if x else []
+                except:
+                    return []
+            else:
+                return []
+        
+        genres = games_df['genres'].apply(parse_list)
+        platforms = games_df['platforms'].apply(parse_list)
+        themes = games_df['themes'].apply(parse_list)
         
         # One-hot encoding
         genres_features = self.mlb_genres.fit_transform(genres)
@@ -176,7 +191,7 @@ class FeatureExtractor:
     
     def save_features(self, features: Dict[str, Any], output_dir: str) -> None:
         """
-        Sparar extraherade features till disk.
+        Sparar extraherade features till disk och Cloud Storage.
         
         Args:
             features: Dictionary med features och metadata
@@ -201,6 +216,48 @@ class FeatureExtractor:
             }, f)
         
         logger.info("Sparade features till %s", output_dir)
+        
+        # Ladda upp till Cloud Storage
+        self.upload_features_to_gcs(output_dir)
+    
+    def upload_features_to_gcs(self, local_dir: str) -> None:
+        """
+        Laddar upp features till Cloud Storage.
+        
+        Args:
+            local_dir: Lokal katalog med features
+        """
+        try:
+            from google.cloud import storage
+            
+            # Get environment variables
+            bucket_name = os.environ.get("FEATURES_BUCKET", "igdb-model-artifacts-dev")
+            
+            # Initialize Cloud Storage client
+            storage_client = storage.Client()
+            bucket = storage_client.bucket(bucket_name)
+            
+            # Upload files
+            files_to_upload = [
+                'text_features.npz',
+                'categorical_features.npz', 
+                'combined_features.npz',
+                'features_metadata.pkl'
+            ]
+            
+            for filename in files_to_upload:
+                local_path = os.path.join(local_dir, filename)
+                if os.path.exists(local_path):
+                    blob_name = f"features/{filename}"
+                    blob = bucket.blob(blob_name)
+                    blob.upload_from_filename(local_path)
+                    logger.info("Laddade upp %s till gs://%s/%s", filename, bucket_name, blob_name)
+            
+            logger.info("Alla features laddade upp till Cloud Storage")
+            
+        except Exception as e:
+            logger.error("Fel vid uppladdning till Cloud Storage: %s", str(e))
+            # Fortsätt även om uppladdning misslyckas
     
     @staticmethod
     def load_features(input_dir: str) -> Dict[str, Any]:
@@ -317,29 +374,18 @@ def load_games_from_bigquery(limit: Optional[int] = None) -> pd.DataFrame:
     
     query = f"""
     SELECT
-        raw.id AS game_id,
+        g.game_id,
         g.canonical_name,
         g.display_name,
-        raw.summary,
+        g.summary,
         g.quality_score,
-        ARRAY_AGG(STRUCT(genre.name)) AS genres,
-        ARRAY_AGG(STRUCT(platform.name)) AS platforms,
-        ARRAY_AGG(STRUCT(theme.name)) AS themes
+        g.genres,
+        g.platforms,
+        g.themes
     FROM
-        `igdb-pipeline-v3.igdb_games_dev.games_raw` AS raw
-    JOIN
-        `igdb-pipeline-v3.igdb_games_dev.games` AS g
-        ON CAST(raw.id AS STRING) = g.game_id
-    LEFT JOIN
-        UNNEST(raw.genres) AS genre
-    LEFT JOIN
-        UNNEST(raw.platforms) AS platform
-    LEFT JOIN
-        UNNEST(raw.themes) AS theme
+        `igdb-pipeline-v3.igdb_games_dev.games_with_categories` AS g
     WHERE
-        raw.summary IS NOT NULL
-    GROUP BY
-        raw.id, g.canonical_name, g.display_name, raw.summary, g.quality_score
+        g.summary IS NOT NULL
     ORDER BY
         g.quality_score DESC
     {limit_clause}
@@ -347,11 +393,6 @@ def load_games_from_bigquery(limit: Optional[int] = None) -> pd.DataFrame:
     
     logger.info("Hämtar data från BigQuery%s", f" (limit: {limit})" if limit else "")
     df = client.query(query).to_dataframe()
-    
-    # Konvertera strukturerade arrays till listor av namn
-    df['genres'] = df['genres'].apply(lambda x: [item['name'] for item in x] if x else [])
-    df['platforms'] = df['platforms'].apply(lambda x: [item['name'] for item in x] if x else [])
-    df['themes'] = df['themes'].apply(lambda x: [item['name'] for item in x] if x else [])
     
     return df
 

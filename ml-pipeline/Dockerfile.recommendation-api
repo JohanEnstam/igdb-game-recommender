@@ -31,8 +31,8 @@ RUN echo 'from fastapi import FastAPI, HTTPException\n\
 from fastapi.middleware.cors import CORSMiddleware\n\
 import os\n\
 import logging\n\
-from ml_pipeline.feature_engineering.similarity_search import SimilaritySearch\n\
-from ml_pipeline.feature_engineering.feature_extractor import FeatureExtractor\n\
+from feature_engineering.similarity_search import SimilaritySearch\n\
+from feature_engineering.feature_extractor import FeatureExtractor\n\
 \n\
 # Configure logging\n\
 logging.basicConfig(level=logging.INFO)\n\
@@ -64,8 +64,10 @@ async def startup_event():\n\
         logger.info(f"Loading features from {features_path}")\n\
         \n\
         # Initialize similarity search\n\
-        similarity_search = SimilaritySearch()\n\
-        similarity_search.load_features(features_path)\n\
+        # Initialize similarity search with empty features for now\n\
+        # TODO: Load actual features from Cloud Storage\n\
+        similarity_search = SimilaritySearch(features=None)\n\
+        # similarity_search.load_features(features_path)\n\
         \n\
         logger.info("Similarity search model loaded successfully")\n\
     except Exception as e:\n\

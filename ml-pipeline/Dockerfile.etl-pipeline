@@ -1,0 +1,35 @@
+# Dockerfile for ETL Pipeline (IGDB Data Ingestion)
+FROM python:3.9-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy ETL pipeline code
+COPY data-pipeline/ingestion/ ./ingestion/
+COPY data-pipeline/processing/ ./processing/
+COPY ml-pipeline/etl_pipeline.py ./
+
+# Set environment variables
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+
+# Create entrypoint script
+RUN echo '#!/bin/bash\n\
+set -e\n\
+echo "Starting ETL Pipeline..."\n\
+python etl_pipeline.py\n\
+echo "ETL Pipeline completed successfully!"\n\
+' > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+# Set entrypoint
+ENTRYPOINT ["/app/entrypoint.sh"]
