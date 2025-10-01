@@ -5,7 +5,7 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:$SHORT_SHA'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:$COMMIT_SHA'
       - '-t'
       - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:latest'
       - './web-app/frontend'
@@ -15,7 +15,7 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: 
       - 'push'
-      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:$SHORT_SHA'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:$COMMIT_SHA'
 
   - name: 'gcr.io/cloud-builders/docker'
     args: 
@@ -27,7 +27,7 @@ steps:
     args: 
       - 'build'
       - '-t'
-      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:$SHORT_SHA'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:$COMMIT_SHA'
       - '-t'
       - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:latest'
       - './web-app/backend'
@@ -36,24 +36,12 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: 
       - 'push'
-      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:$SHORT_SHA'
+      - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:$COMMIT_SHA'
 
   - name: 'gcr.io/cloud-builders/docker'
     args: 
       - 'push'
       - 'europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-api:latest'
-
-# Deploy to Cloud Run (optional)
-# - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-#   entrypoint: 'gcloud'
-#   args: 
-#     - 'run'
-#     - 'deploy'
-#     - 'igdb-recommendation-frontend-dev'
-#     - '--image=europe-west1-docker.pkg.dev/$PROJECT_ID/igdb-recommender/igdb-recommendation-frontend:latest'
-#     - '--region=europe-west1'
-#     - '--platform=managed'
-#     - '--allow-unauthenticated'
 
 options:
   logging: CLOUD_LOGGING_ONLY
