@@ -40,11 +40,6 @@ Systemet består av tre huvudkomponenter med tydlig separation of concerns:
 
 ## 🚀 Live System
 
-### API Endpoint
-```
-https://igdb-recommendation-api-dev-5wxthq523q-ew.a.run.app/api/recommendations/{game_id}
-```
-
 ### Data & Features
 - **BigQuery**: 24,997 spel i `igdb_games_dev.games_with_categories`
 - **Features**: 4 filer i `gs://igdb-model-artifacts-dev/features/`
@@ -79,10 +74,6 @@ https://igdb-recommendation-api-dev-5wxthq523q-ew.a.run.app/api/recommendations/
    source activate.sh
    ```
 
-4. Testa API:et
-   ```bash
-   curl "https://igdb-recommendation-api-dev-5wxthq523q-ew.a.run.app/api/recommendations/123"
-   ```
 
 ## Deployment
 
