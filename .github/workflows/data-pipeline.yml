@@ -2,7 +2,7 @@
 # This workflow is disabled until data pipeline is fully implemented
 # To enable: remove the 'disabled: true' line below
 
-# disabled: true
+disabled: true
 
 name: "Data Pipeline CI/CD (DISABLED)"
 
