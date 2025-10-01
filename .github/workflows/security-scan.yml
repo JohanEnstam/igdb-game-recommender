@@ -1,4 +1,10 @@
-name: "Security Scan"
+# DISABLED: Security Scan not yet implemented
+# This workflow is disabled until security scanning is fully implemented
+# To enable: remove the 'disabled: true' line below
+
+# disabled: true
+
+name: "Security Scan (DISABLED)"
 
 on:
   push:

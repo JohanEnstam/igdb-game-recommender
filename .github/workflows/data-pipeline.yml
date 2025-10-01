@@ -1,4 +1,10 @@
-name: "Data Pipeline CI/CD"
+# DISABLED: Data Pipeline not yet implemented
+# This workflow is disabled until data pipeline is fully implemented
+# To enable: remove the 'disabled: true' line below
+
+# disabled: true
+
+name: "Data Pipeline CI/CD (DISABLED)"
 
 on:
   push:

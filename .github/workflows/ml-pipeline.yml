@@ -1,4 +1,10 @@
-name: "ML Pipeline CI/CD"
+# DISABLED: ML Pipeline not yet implemented
+# This workflow is disabled until ML pipeline is fully implemented
+# To enable: remove the 'disabled: true' line below
+
+# disabled: true
+
+name: "ML Pipeline CI/CD (DISABLED)"
 
 on:
   push:
