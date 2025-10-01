@@ -78,7 +78,7 @@ resource "google_cloud_run_v2_service" "recommendation_api" {
       }
       
       env {
-        name  = "STORAGE_BUCKET"
+        name  = "FEATURES_BUCKET"
         value = var.storage_bucket
       }
       
@@ -152,6 +152,54 @@ resource "google_cloud_run_v2_job" "feature_extraction" {
   labels = var.labels
 }
 
+# Cloud Run service for frontend web application
+resource "google_cloud_run_v2_service" "frontend" {
+  name     = "igdb-recommendation-frontend-${var.environment}"
+  location = var.region
+  project  = var.project_id
+
+  template {
+    service_account = var.service_account_email
+    
+    containers {
+      image = "europe-west1-docker.pkg.dev/igdb-pipeline-v3/igdb-recommender/igdb-recommendation-frontend:latest"
+      
+      ports {
+        container_port = 3000
+      }
+      
+      env {
+        name  = "NEXT_PUBLIC_API_URL"
+        value = google_cloud_run_v2_service.recommendation_api.uri
+      }
+      
+      env {
+        name  = "NODE_ENV"
+        value = "production"
+      }
+      
+      resources {
+        limits = {
+          cpu    = "1"
+          memory = "2Gi"
+        }
+      }
+    }
+    
+    scaling {
+      min_instance_count = 0
+      max_instance_count = 5
+    }
+  }
+
+  traffic {
+    percent = 100
+    type    = "TRAFFIC_TARGET_ALLOCATION_TYPE_LATEST"
+  }
+
+  labels = var.labels
+}
+
 # Cloud Run job for ETL pipeline (data ingestion from IGDB API)
 resource "google_cloud_run_v2_job" "etl_pipeline" {
   name     = "igdb-etl-pipeline-${var.environment}"
@@ -219,6 +267,15 @@ resource "google_cloud_run_service_iam_policy" "recommendation_api_public" {
   policy_data = data.google_iam_policy.public.policy_data
 }
 
+# IAM policy for Cloud Run frontend service (public access)
+resource "google_cloud_run_service_iam_policy" "frontend_public" {
+  location = google_cloud_run_v2_service.frontend.location
+  project  = google_cloud_run_v2_service.frontend.project
+  service  = google_cloud_run_v2_service.frontend.name
+
+  policy_data = data.google_iam_policy.public.policy_data
+}
+
 data "google_iam_policy" "public" {
   binding {
     role = "roles/run.invoker"
@@ -234,6 +291,11 @@ output "recommendation_api_url" {
   value       = google_cloud_run_v2_service.recommendation_api.uri
 }
 
+output "frontend_url" {
+  description = "URL of the frontend web application"
+  value       = google_cloud_run_v2_service.frontend.uri
+}
+
 output "feature_extraction_job_name" {
   description = "Name of the feature extraction job"
   value       = google_cloud_run_v2_job.feature_extraction.name
@@ -246,5 +308,5 @@ output "etl_pipeline_job_name" {
 
 output "status" {
   description = "Status of the Cloud Run module"
-  value       = "Implemented with API service and batch job"
+  value       = "Implemented with API service, frontend, and batch jobs"
 }

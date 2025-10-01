@@ -90,6 +90,16 @@ output "cloud_run_status" {
   value       = module.cloud_run.status
 }
 
+output "recommendation_api_url" {
+  description = "URL of the recommendation API service"
+  value       = module.cloud_run.recommendation_api_url
+}
+
+output "frontend_url" {
+  description = "URL of the frontend service"
+  value       = module.cloud_run.frontend_url
+}
+
 # Vertex AI outputs
 output "vertex_ai_status" {
   description = "Status of the Vertex AI module"
