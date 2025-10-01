@@ -10,6 +10,11 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 import os
 import logging
+import sys
+
+# Add the services directory to the path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'services'))
+from recommendation_service import recommendation_service
 
 # Configure logging
 logging.basicConfig(
@@ -25,10 +30,25 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# Initialize recommendation service on startup
+@app.on_event("startup")
+async def startup_event():
+    """Initialize the recommendation service on startup"""
+    try:
+        logger.info("Initializing recommendation service...")
+        recommendation_service.initialize()
+        logger.info("Recommendation service initialized successfully")
+    except Exception as e:
+        logger.error(f"Failed to initialize recommendation service: {e}")
+        # Don't raise - let the app start but recommendations will fail gracefully
+
 # Configure CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # For development only
+    allow_origins=[
+        "https://igdb-recommendation-frontend-dev-5wxthq523q-ew.a.run.app",
+        "http://localhost:3000",  # For local development
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -70,50 +90,38 @@ async def health():
 @app.get("/games/search", response_model=List[GameBase])
 async def search_games(
     query: str = Query(..., min_length=2, description="Search query"),
-    limit: int = Query(10, ge=1, le=50, description="Maximum number of results"),
+    limit: int = Query(3, ge=1, le=50, description="Maximum number of results"),
 ):
     """
     Search for games by name.
     """
     try:
-        # Mock data for now
-        mock_games = [
-            {
-                "id": 1,
-                "name": "The Legend of Zelda: Breath of the Wild",
-                "summary": "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild.",
-                "rating": 9.2,
-                "first_release_date": "2017-03-03",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co3p2d.jpg",
-            },
-            {
-                "id": 2,
-                "name": "The Witcher 3: Wild Hunt",
-                "summary": "The Witcher 3: Wild Hunt is an action role-playing game set in an open world environment.",
-                "rating": 9.3,
-                "first_release_date": "2015-05-19",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg",
-            },
-            {
-                "id": 3,
-                "name": "Red Dead Redemption 2",
-                "summary": "Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
-                "rating": 9.4,
-                "first_release_date": "2018-10-26",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1q9f.jpg",
-            },
-        ]
+        logger.info(f"Searching for games with query: '{query}', limit: {limit}")
         
-        # Filter mock data based on query
-        filtered_games = [
-            game for game in mock_games 
-            if query.lower() in game["name"].lower()
-        ][:limit]
+        # Use recommendation service to search games
+        games = recommendation_service.search_games(query, limit)
         
-        return filtered_games
+        if not games:
+            logger.info(f"No games found for query: '{query}'")
+            return []
+        
+        # Convert to GameBase format
+        result_games = []
+        for game in games:
+            result_games.append({
+                "id": game["id"],
+                "name": game["name"],
+                "summary": game["summary"],
+                "rating": game["rating"],
+                "first_release_date": game["first_release_date"],
+                "cover_url": game["cover_url"]
+            })
+        
+        logger.info(f"Found {len(result_games)} games for query: '{query}'")
+        return result_games
     except Exception as e:
-        logger.error(f"Error searching games: {e}")
-        raise HTTPException(status_code=500, detail="Internal server error")
+        logger.error(f"Error searching games for query '{query}': {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to search games: {str(e)}")
 
 # Get game by ID endpoint
 @app.get("/games/{game_id}", response_model=GameDetail)
@@ -122,89 +130,32 @@ async def get_game(game_id: int):
     Get detailed information about a specific game.
     """
     try:
-        # Mock data for now
-        mock_games = {
-            1: {
-                "id": 1,
-                "name": "The Legend of Zelda: Breath of the Wild",
-                "summary": "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild.",
-                "storyline": "Forget everything you know about The Legend of Zelda games. Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild, a boundary-breaking new game in the acclaimed series.",
-                "rating": 9.2,
-                "rating_count": 1234,
-                "aggregated_rating": 9.5,
-                "aggregated_rating_count": 123,
-                "first_release_date": "2017-03-03",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co3p2d.jpg",
-                "genres": [
-                    {"id": 12, "name": "Adventure"},
-                    {"id": 31, "name": "RPG"},
-                ],
-                "platforms": [
-                    {"id": 41, "name": "Nintendo Switch"},
-                    {"id": 47, "name": "Wii U"},
-                ],
-                "themes": [
-                    {"id": 1, "name": "Fantasy"},
-                    {"id": 39, "name": "Open World"},
-                ],
-            },
-            2: {
-                "id": 2,
-                "name": "The Witcher 3: Wild Hunt",
-                "summary": "The Witcher 3: Wild Hunt is an action role-playing game set in an open world environment.",
-                "storyline": "The Witcher 3: Wild Hunt is a story-driven, next-generation open world role-playing game set in a visually stunning fantasy universe full of meaningful choices and impactful consequences.",
-                "rating": 9.3,
-                "rating_count": 2345,
-                "aggregated_rating": 9.4,
-                "aggregated_rating_count": 234,
-                "first_release_date": "2015-05-19",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg",
-                "genres": [
-                    {"id": 12, "name": "Adventure"},
-                    {"id": 31, "name": "RPG"},
-                ],
-                "platforms": [
-                    {"id": 6, "name": "PC"},
-                    {"id": 48, "name": "PlayStation 4"},
-                    {"id": 49, "name": "Xbox One"},
-                ],
-                "themes": [
-                    {"id": 1, "name": "Fantasy"},
-                    {"id": 39, "name": "Open World"},
-                ],
-            },
-            3: {
-                "id": 3,
-                "name": "Red Dead Redemption 2",
-                "summary": "Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
-                "storyline": "America, 1899. The end of the wild west era has begun as lawmen hunt down the last remaining outlaw gangs. Those who will not surrender or succumb are killed.",
-                "rating": 9.4,
-                "rating_count": 3456,
-                "aggregated_rating": 9.6,
-                "aggregated_rating_count": 345,
-                "first_release_date": "2018-10-26",
-                "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1q9f.jpg",
-                "genres": [
-                    {"id": 12, "name": "Adventure"},
-                    {"id": 31, "name": "RPG"},
-                    {"id": 5, "name": "Shooter"},
-                ],
-                "platforms": [
-                    {"id": 6, "name": "PC"},
-                    {"id": 48, "name": "PlayStation 4"},
-                    {"id": 49, "name": "Xbox One"},
-                ],
-                "themes": [
-                    {"id": 39, "name": "Open World"},
-                    {"id": 28, "name": "Western"},
-                ],
-            },
-        }
+        # Use recommendation service to get game details
+        games = recommendation_service.get_game_details([str(game_id)])
         
-        if game_id not in mock_games:
+        if not games:
             raise HTTPException(status_code=404, detail="Game not found")
         
-        return mock_games[game_id]
+        game = games[0]
+        
+        # Convert to GameDetail format
+        game_detail = {
+            "id": game["id"],
+            "name": game["name"],
+            "summary": game["summary"],
+            "storyline": game["summary"],  # Use summary as storyline for now
+            "rating": game["rating"],
+            "rating_count": None,  # Not available in current data
+            "aggregated_rating": game["rating"],
+            "aggregated_rating_count": None,  # Not available in current data
+            "first_release_date": game["first_release_date"],
+            "cover_url": game["cover_url"],
+            "genres": [{"id": i, "name": genre} for i, genre in enumerate(game["genres"])],
+            "platforms": [{"id": i, "name": platform} for i, platform in enumerate(game["platforms"])],
+            "themes": [{"id": i, "name": theme} for i, theme in enumerate(game["themes"])]
+        }
+        
+        return game_detail
     except HTTPException:
         raise
     except Exception as e:
@@ -221,94 +172,33 @@ async def get_recommendations(
     Get game recommendations based on a specific game.
     """
     try:
-        # Mock data for now
-        mock_games = {
-            1: [  # Recommendations for Zelda: BOTW
-                {
-                    "id": 2,
-                    "name": "The Witcher 3: Wild Hunt",
-                    "summary": "The Witcher 3: Wild Hunt is an action role-playing game set in an open world environment.",
-                    "rating": 9.3,
-                    "first_release_date": "2015-05-19",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg",
-                },
-                {
-                    "id": 3,
-                    "name": "Red Dead Redemption 2",
-                    "summary": "Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
-                    "rating": 9.4,
-                    "first_release_date": "2018-10-26",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1q9f.jpg",
-                },
-                {
-                    "id": 4,
-                    "name": "Horizon Zero Dawn",
-                    "summary": "Horizon Zero Dawn is an action role-playing game set in a post-apocalyptic world.",
-                    "rating": 9.0,
-                    "first_release_date": "2017-02-28",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1izx.jpg",
-                },
-            ],
-            2: [  # Recommendations for The Witcher 3
-                {
-                    "id": 1,
-                    "name": "The Legend of Zelda: Breath of the Wild",
-                    "summary": "Step into a world of discovery, exploration, and adventure in The Legend of Zelda: Breath of the Wild.",
-                    "rating": 9.2,
-                    "first_release_date": "2017-03-03",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co3p2d.jpg",
-                },
-                {
-                    "id": 3,
-                    "name": "Red Dead Redemption 2",
-                    "summary": "Red Dead Redemption 2 is an epic tale of life in America's unforgiving heartland.",
-                    "rating": 9.4,
-                    "first_release_date": "2018-10-26",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1q9f.jpg",
-                },
-                {
-                    "id": 5,
-                    "name": "God of War",
-                    "summary": "God of War is an action-adventure game developed by Santa Monica Studio and published by Sony Interactive Entertainment.",
-                    "rating": 9.3,
-                    "first_release_date": "2018-04-20",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1tmu.jpg",
-                },
-            ],
-            3: [  # Recommendations for Red Dead Redemption 2
-                {
-                    "id": 2,
-                    "name": "The Witcher 3: Wild Hunt",
-                    "summary": "The Witcher 3: Wild Hunt is an action role-playing game set in an open world environment.",
-                    "rating": 9.3,
-                    "first_release_date": "2015-05-19",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1wyy.jpg",
-                },
-                {
-                    "id": 6,
-                    "name": "Grand Theft Auto V",
-                    "summary": "Grand Theft Auto V is an action-adventure game set in an open world environment.",
-                    "rating": 9.1,
-                    "first_release_date": "2013-09-17",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1nt4.jpg",
-                },
-                {
-                    "id": 7,
-                    "name": "Assassin's Creed Odyssey",
-                    "summary": "Assassin's Creed Odyssey is an action role-playing game set in ancient Greece.",
-                    "rating": 8.8,
-                    "first_release_date": "2018-10-05",
-                    "cover_url": "https://images.igdb.com/igdb/image/upload/t_cover_big/co1zkt.jpg",
-                },
-            ],
-        }
+        # Get similar games using ML model
+        similar_games = recommendation_service.get_similar_games(str(game_id), limit)
         
-        if game_id not in mock_games:
+        if not similar_games:
             return {"game_id": game_id, "recommended_games": []}
+        
+        # Get game IDs from recommendations
+        recommended_game_ids = [rec["game_id"] for rec in similar_games]
+        
+        # Get detailed game information
+        games_details = recommendation_service.get_game_details(recommended_game_ids)
+        
+        # Convert to GameBase format
+        recommended_games = []
+        for game in games_details:
+            recommended_games.append({
+                "id": game["id"],
+                "name": game["name"],
+                "summary": game["summary"],
+                "rating": game["rating"],
+                "first_release_date": game["first_release_date"],
+                "cover_url": game["cover_url"]
+            })
         
         return {
             "game_id": game_id,
-            "recommended_games": mock_games[game_id][:limit],
+            "recommended_games": recommended_games,
         }
     except Exception as e:
         logger.error(f"Error getting recommendations for game {game_id}: {e}")

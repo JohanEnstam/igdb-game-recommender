@@ -107,7 +107,7 @@ jobs:
       - name: Build and Push Backend Container
         run: |
           ENV=${{ github.event.inputs.environment || 'dev' }}
-          IMAGE_NAME="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/igdb-app/backend:${ENV}-${GITHUB_SHA::7}"
+          IMAGE_NAME="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/igdb-recommender/igdb-recommendation-api:${ENV}-${GITHUB_SHA::7}"
           
           docker build -t ${IMAGE_NAME} -f web-app/backend/Dockerfile web-app/backend/
           docker push ${IMAGE_NAME}
@@ -118,13 +118,19 @@ jobs:
         run: |
           ENV=${{ github.event.inputs.environment || 'dev' }}
           
-          gcloud run deploy igdb-api-${ENV} \
+          gcloud run deploy igdb-recommendation-api-${ENV} \
             --image=${BACKEND_IMAGE} \
             --region=${{ secrets.GCP_REGION }} \
             --platform=managed \
             --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }} \
             --set-env-vars="GCP_PROJECT_ID=${{ secrets.GCP_PROJECT_ID }},ENVIRONMENT=${ENV}" \
-            --allow-unauthenticated
+            --allow-unauthenticated \
+            --no-traffic
+          
+          # Aktivera trafik till nya revisionen
+          gcloud run services update-traffic igdb-recommendation-api-${ENV} \
+            --region=${{ secrets.GCP_REGION }} \
+            --to-latest
   
   deploy-frontend:
     name: "Deploy Frontend"
@@ -150,19 +156,44 @@ jobs:
           cd web-app/frontend
           npm ci
       
-      - name: Build
-        run: |
-          cd web-app/frontend
-          # Set the API URL based on environment
-          ENV=${{ github.event.inputs.environment || 'dev' }}
-          echo "NEXT_PUBLIC_API_URL=https://igdb-api-${ENV}-${{ secrets.GCP_PROJECT_ID }}.a.run.app" > .env.production
-          npm run build
-      
-      - name: Deploy to Vercel
-        uses: amondnet/vercel-action@v20
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
         with:
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-          working-directory: web-app/frontend
-          vercel-args: '--prod'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+      
+      - name: Authenticate Docker to Google Artifact Registry
+        run: |
+          gcloud auth configure-docker ${{ secrets.GCP_REGION }}-docker.pkg.dev
+      
+      - name: Build and Push Frontend Container
+        run: |
+          ENV=${{ github.event.inputs.environment || 'dev' }}
+          IMAGE_NAME="${{ secrets.GCP_REGION }}-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/igdb-recommender/igdb-recommendation-frontend:${ENV}-${GITHUB_SHA::7}"
+          
+          # Set the API URL based on environment
+          echo "NEXT_PUBLIC_API_URL=https://igdb-recommendation-api-${ENV}-5wxthq523q-ew.a.run.app" > web-app/frontend/.env.production
+          
+          docker build -t ${IMAGE_NAME} -f web-app/frontend/Dockerfile web-app/frontend/
+          docker push ${IMAGE_NAME}
+          
+          echo "FRONTEND_IMAGE=${IMAGE_NAME}" >> $GITHUB_ENV
+      
+      - name: Deploy to Cloud Run
+        run: |
+          ENV=${{ github.event.inputs.environment || 'dev' }}
+          
+          gcloud run deploy igdb-recommendation-frontend-${ENV} \
+            --image=${FRONTEND_IMAGE} \
+            --region=${{ secrets.GCP_REGION }} \
+            --platform=managed \
+            --service-account=${{ secrets.CLOUD_RUN_SERVICE_ACCOUNT }} \
+            --set-env-vars="NEXT_PUBLIC_API_URL=https://igdb-recommendation-api-${ENV}-5wxthq523q-ew.a.run.app,NODE_ENV=production" \
+            --allow-unauthenticated \
+            --no-traffic
+          
+          # Aktivera trafik till nya revisionen
+          gcloud run services update-traffic igdb-recommendation-frontend-${ENV} \
+            --region=${{ secrets.GCP_REGION }} \
+            --to-latest
