@@ -87,12 +87,14 @@ jobs:
           # Create missing utils file if it doesn't exist
           if [ ! -f "src/lib/utils.ts" ]; then
             mkdir -p src/lib
-            echo 'import { type ClassValue, clsx } from "clsx"
+            cat > src/lib/utils.ts << 'EOF'
+import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
-}' > src/lib/utils.ts
+}
+EOF
           fi
           npm run build
   
